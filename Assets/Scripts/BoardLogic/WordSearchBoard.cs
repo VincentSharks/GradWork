@@ -4,6 +4,22 @@ using UnityEngine.UI;
 
 public class WordSearchBoard : MonoBehaviour, IBoard
 {
+    //get input field
+    //Get board size
+    //board size / columns = sizeX
+    //board size / rows = size Y
+
+    //if size Y < Size X
+    //size inputfields = size Y
+    //else
+    //size inputfields = sizeX
+
+
+
+
+
+
+
     //put the sudoku sizes in here
 
     public int SizeX { get => throw new System.NotImplementedException(); }

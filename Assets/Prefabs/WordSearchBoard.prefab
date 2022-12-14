@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2122287833132499360}
   - component: {fileID: 2122287833132499361}
   - component: {fileID: 4369942239286757944}
+  - component: {fileID: 5707982182051079819}
   m_Layer: 5
   m_Name: WordSearchBoard
   m_TagString: Untagged
@@ -92,3 +93,27 @@ MonoBehaviour:
   boardHolder: {fileID: 2122287833132499391}
   linePixel: {fileID: 4843845494221163040, guid: 76c5601fea3b4084f946b317c48ada3a, type: 3}
   inputBox: {fileID: 1694884163779530002, guid: 11b7b385d538d9f4e9c7342345398d3f, type: 3}
+--- !u!114 &5707982182051079819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122287833132499391}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 50, y: 50}
+  m_Spacing: {x: 25, y: 25}
+  m_Constraint: 0
+  m_ConstraintCount: 2
