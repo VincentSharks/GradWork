@@ -2,15 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SudokuBoard : MonoBehaviour, IBoard
+/// <summary>
+/// Logic for spawning an empty binary board
+/// - 
+/// </summary>
+
+public class SudokuBoard : MonoBehaviour
 {
-    //put the sudoku sizes in here
-
-    public int SizeX { get => throw new System.NotImplementedException(); }
-    public int SizeY { get => throw new System.NotImplementedException(); }
-
     [SerializeField] GameObject linePixel;
-
     [SerializeField] GameObject inputBox;
 
     int totalWidth = 700;

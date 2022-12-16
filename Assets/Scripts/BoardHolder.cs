@@ -10,8 +10,6 @@ public class BoardHolder : MonoBehaviour, IHolder
 
     int value;
 
-    //[SerializeField] private List<GameObject> _childs = new List<GameObject>();
-    //public List<GameObject> Childs { get => _childs; set => _childs = value; }
 
 
     private void Start()

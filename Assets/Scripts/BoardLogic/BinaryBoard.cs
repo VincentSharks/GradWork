@@ -2,9 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Logic for spawning an empty binary board
+/// - Grid based input fields
+/// - Can resize dimensions (only even numbers)
+/// </summary>
+
 public class BinaryBoard : MonoBehaviour
 {
-    [SerializeField, Range(2,10)] int dimension;
+    [SerializeField, Range(2,14)] int dimension;
     int dim;
 
     bool isBoardSet = false;
@@ -77,7 +83,7 @@ public class BinaryBoard : MonoBehaviour
 
     private void CheckEven()
     {
-        if (dimension % 2 != 0) //dimensions have to be %2
+        if (dimension % 2 != 0) //Dimensions have to be %2
         {
             dimension++;
         }
