@@ -3,82 +3,69 @@ using TMPro;
 
 /// <summary>
 /// Gather all the info from other scripts
-/// Display this info in the UI
-/// use this info to write to a JSON
 /// </summary>
 
 public class InfoManager : MonoBehaviour
 {
-    //Gather all info
-
-    //Board/Puzzle name (Get from drop down)
+    [Header("Board")]
     [SerializeField] GameObject PuzzleDropDown;
-    string puzzleName;
+    public string puzzleName;
     
     [SerializeField] GameObject boardHolder;
     GameObject activeBoard;
+    public Vector2 boardSize;
 
-    //board size
-    //board dimensions
+    [Header("Algorithm")]
+    [SerializeField] GameObject algorithDropDown;
+    string algorithmName;
 
-    //Algorithm name (Get from drop down)
-    //algorithm version number
+    [SerializeField] GameObject algorithmHolder;
+    GameObject activeAlgorithm;
+    float algorithmVersion;
+
+    float randomSeed;
 
 
     public bool isValuesChanged = false; //Bool to set to true in oter scripts when a parameter is changed
 
 
-    //puzzle name UI
-    //
-
-
-
-
-
-    //UI
-    [SerializeField] GameObject infoUI;
-    [SerializeField] GameObject AlgorithmDropDown;
-
-
-    //Puzzle
-    //Get puzzle name
-    //get board size
-    //get sliders 
-
-    string boardName;
+    public void IsChanged()
+    {
+        isValuesChanged = true;
+    }
 
     private void Update()
     {
-        GetActiveBoard(); //
-        SetInfoUI();
-    }
-
-    private void GetActiveBoard()
-    {
-        for (int i = 0; i < boardHolder.transform.childCount; i++)
+        if(isValuesChanged)
         {
-            if (boardHolder.transform.GetChild(i).gameObject.activeSelf == true)
-            {
-                activeBoard = boardHolder.transform.GetChild(i).gameObject;
-                boardName = activeBoard.name.Replace("Board", "");
+            //Check info
+            GetBoardInfo();
+            GetAlgorithmInfo();
 
-                //int value = PuzzleDropDown.GetComponent<TMP_Dropdown>().value;
-                //boardName = PuzzleDropDown.GetComponent<TMP_Dropdown>().options[value].ToString();
-            }
+            isValuesChanged = false;
         }
     }
 
-    private void SetInfoUI()
+    private void GetBoardInfo()
     {
-        //Get the info child needed
-        //set the info 
+        //Get board name
+        var dropdown = PuzzleDropDown.GetComponent<TMP_Dropdown>();
+        var selectedID = dropdown.value;
 
-        for (int i = 0; i < boardHolder.transform.childCount; i++)
+        if(selectedID != 0) //isn't empty
         {
-            if (boardHolder.transform.GetChild(i).gameObject.name == "PuzzleInfo")
-            {
-                Debug.Log("Found");
-            }
+            puzzleName = dropdown.options[selectedID].text; //Sudoku
         }
+
+
+        //Get active board
+        activeBoard = boardHolder.transform.GetChild(selectedID - 1).gameObject;
+        //var board = boardHolder.transform.GetChild(selectedID - 1).name.ToUpper(); //SUDOKUBOARD
+        boardSize = activeBoard.GetComponent<IBoard>().dimension;
+    }
+
+    private void GetAlgorithmInfo()
+    {
+
     }
 }

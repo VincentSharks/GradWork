@@ -10,23 +10,21 @@ using UnityEngine;
 
 public interface IBoard
 {
-    Vector2 Dimension { get; set; } //Dimensions
+    Vector2 dimension { get; set; } //Dimensions
     bool isBoardSet { get; set; } //True when board is placed (stops loops)
     int lineThiccWidth { get; set; }
     int lineThinWidth { get; set; }
 
 
-
-    //Begin event
-
-
-    //End event
-
-
-    //CreateBoard function
+    //Create Board function
     void CreateBoard();
-
     void DeleteBoard();
+
     void SpawnInputFields();
     void SpawnLines();
+
+    //Fill Board function
+
+    //Begin Event
+    //End Event
 }

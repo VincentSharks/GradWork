@@ -122,6 +122,18 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 26.4
       objectReference: {fileID: 0}
+    - target: {fileID: 4344315061708712966, guid: 15364abcb72237c49a4565ffd12a6c88, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: IsChanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 4344315061708712966, guid: 15364abcb72237c49a4565ffd12a6c88, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: InfoManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4344315061708712966, guid: 15364abcb72237c49a4565ffd12a6c88, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4344315062200856924, guid: 15364abcb72237c49a4565ffd12a6c88, type: 3}
       propertyPath: m_fontSize
       value: 38
