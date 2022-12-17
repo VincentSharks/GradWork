@@ -61,7 +61,7 @@ public class InfoManager : MonoBehaviour
         //Get active board
         activeBoard = boardHolder.transform.GetChild(selectedID - 1).gameObject;
         //var board = boardHolder.transform.GetChild(selectedID - 1).name.ToUpper(); //SUDOKUBOARD
-        boardSize = activeBoard.GetComponent<IBoard>().dimension;
+        boardSize = activeBoard.GetComponent<IBoard>().Dimension;
     }
 
     private void GetAlgorithmInfo()

@@ -10,13 +10,14 @@ using UnityEngine;
 
 public interface IBoard
 {
-    Vector2 dimension { get; set; } //Dimensions
-    bool isBoardSet { get; set; } //True when board is placed (stops loops)
-    int lineThiccWidth { get; set; }
-    int lineThinWidth { get; set; }
+    Vector2 Dimension { get; set; } //Dimensions
+    bool IsBoardSet { get; set; } //True when board is placed (stops loops)
+    int LineThiccWidth { get; set; }
+    int LineThinWidth { get; set; }
 
 
     //Create Board function
+    void CompareValues();
     void CreateBoard();
     void DeleteBoard();
 

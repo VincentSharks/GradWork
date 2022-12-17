@@ -8,14 +8,24 @@ using UnityEngine.UI;
 /// - Can resize dimensions (only even numbers)
 /// </summary>
 
-public class BinaryBoard : MonoBehaviour
+public class BinaryBoard : MonoBehaviour, IBoard
 {
-    [SerializeField, Range(2,14)] int dimension;
+    int valueMin = 2;
+    int valueMax = 14;
+
+    int sizeX;
+    int sizeY;
+
+    public Vector2 Dimension { get { return new Vector2(sizeX, sizeY); } set { value = new Vector2(sizeX, sizeY); } }
+
     int dim;
 
-    bool isBoardSet = false;
+    public bool IsBoardSet { get { return false; } set { value = false; } } //false
 
     float spacing;
+
+    UIHandler uiHand;
+    InfoManager info;
 
     [Header("Fields")]
     [SerializeField] GameObject inputBox;
@@ -29,31 +39,87 @@ public class BinaryBoard : MonoBehaviour
     [SerializeField] GameObject linePixel;
     List<GameObject> lines = new List<GameObject>();
     [SerializeField] GameObject lineHolder;
-    
-    int lineThiccWidth = 10;
-    int lineThinWidth = 5;
+
+    public int LineThinWidth { get { return 5; } set { value = 5; } }
+    public int LineThiccWidth { get { return 10; } set { value = 10; } }
 
 
     private void OnEnable()
     {
-        dimension = 4;
-        dim = 0;
-
         fieldGrid = fieldHolder.GetComponent<GridLayoutGroup>();
 
-        if (!isBoardSet)
+        sizeX = 2;
+        sizeY = 2;
+
+        dim = 0;
+
+        info = FindObjectOfType<InfoManager>();
+
+        uiHand = FindObjectOfType<UIHandler>();
+        uiHand.SetUpSlider(true, false, valueMin, valueMax, sizeX, sizeY);
+
+        if (!IsBoardSet)
         {
             CreateBoard();
         }        
     }
 
     private void Update()
-    {
-        CheckEven();
+    {        
         CompareValues();
     }
 
-    private void DeleteExistingBoard()
+    private void CheckEven()
+    {
+        if (sizeX % 2 != 0) //Dimensions have to be %2
+        {
+            sizeX++;            
+        }
+    }
+
+    public void CompareValues()
+    {
+        //Get slider value
+        sizeX = uiHand.GetXSliderValue();
+        sizeY = uiHand.GetYSliderValue();
+
+        
+        CheckEven();
+
+        Dimension = new Vector2(sizeX, sizeY);
+
+        if (dim != Dimension.x) //Dimension changed
+        {
+            DeleteBoard();
+
+            sizeY = sizeX;
+
+            //info manager value change
+            info.isValuesChanged = true;
+
+
+            fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            fieldGrid.constraintCount = (int)Dimension.x;
+            
+
+            CreateBoard();
+            dim = (int)Dimension.x;
+        }
+    }
+
+    public void CreateBoard()
+    {
+        spacing = totalWidth / Dimension.x;
+        fieldGrid.cellSize = new Vector2(spacing, spacing);
+
+        this.GetComponent<Image>().color = new Color(255, 255, 255, 255); //Switch to a white colour BG colour
+
+        SpawnInputFields();
+        SpawnLines();
+        IsBoardSet = true;
+    }
+
+    public void DeleteBoard()
     {
         foreach(GameObject go in inputFields) //Remove all input fields
         {
@@ -67,45 +133,15 @@ public class BinaryBoard : MonoBehaviour
 
         inputFields.Clear();
         lines.Clear();
-        isBoardSet = false;
+        IsBoardSet = false;
     }
 
-    private void CompareValues()
-    {
-        if(dim != dimension) //Dimension changed
-        {            
-            DeleteExistingBoard();
-            fieldGrid.constraintCount = dimension;
-            CreateBoard();
-            dim = dimension;
-        }
-    }
 
-    private void CheckEven()
+    public void SpawnInputFields()
     {
-        if (dimension % 2 != 0) //Dimensions have to be %2
+        for (int row = 0; row < Dimension.x; row++)
         {
-            dimension++;
-        }
-    }
-
-    public void CreateBoard()
-    {
-        spacing = totalWidth / dimension;
-        fieldGrid.cellSize = new Vector2(spacing, spacing);
-
-        this.GetComponent<Image>().color = new Color(255, 255, 255, 255); //Switch to a white colour BG colour
-
-        SpawnInputFields();
-        SpawnLines();
-        isBoardSet = true;
-    }
-
-    private void SpawnInputFields()
-    {
-        for (int row = 0; row < dimension; row++)
-        {
-            for (int column = 0; column < this.dimension; column++)
+            for (int column = 0; column < this.Dimension.y; column++)
             {
                 var input = Instantiate(inputBox, fieldHolder.transform);
                 inputFields.Add(input);
@@ -113,42 +149,88 @@ public class BinaryBoard : MonoBehaviour
         }
     }
 
-    private void SpawnLines()
+    public void SpawnLines()
     {
         var outerLineAddition = 10; //The outer lines don't connect in the corners, with this they connect
 
-        for (int index = 0; index <= dimension; index++)
+        for (int indexX = 0; indexX <= Dimension.x; indexX++) //X
         {
             var verticalLine = Instantiate(linePixel, lineHolder.transform);
-            var horizontalLine = Instantiate(linePixel, lineHolder.transform);
 
-            if (index == 0) //Outer edge left & bottom
+            for (int indexY = 0; indexY <= Dimension.y; indexY++)
             {
-                verticalLine.GetComponent<RectTransform>().localScale = new Vector3(lineThiccWidth, totalWidth + outerLineAddition, 1);
-                verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(-1 * (totalWidth / 2.0f), 0, 0);
+                var horizontalLine = Instantiate(linePixel, lineHolder.transform);
 
-                horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, lineThiccWidth, 1);
-                horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, -1 * (totalWidth / 2.0f), 0);
+                var totalWidth = spacing * sizeX;
+                var totalHeight = spacing * sizeY;
+
+
+                if (indexX == 0 || indexY == 0) //Outer edge left & bottom
+                {
+                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalHeight + outerLineAddition, 1);
+                    verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(-1 * (totalWidth / 2.0f), 0, 0);
+
+                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThiccWidth, 1);
+                    horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, -1 * (totalHeight / 2.0f), 0);
+
+                }
+                else if (indexX % (Dimension.x) == 1 || indexY % (Dimension.y) == 1)
+                {
+                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalHeight + outerLineAddition, 1);
+                    verticalLine.GetComponent<RectTransform>().localPosition = new Vector3((totalWidth / 2.0f), 0, 0);
+
+                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThiccWidth, 1);
+                    horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (totalHeight / 2.0f), 0);
+                }
+                else
+                {
+                    var positionX = ((((Dimension.x / 2) - 1) + indexX) * spacing) - totalWidth;
+                    var positionY = ((((Dimension.y / 2) - 1) + indexY) * spacing) - totalHeight;
+
+                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThinWidth, totalHeight + outerLineAddition, 1);
+                    verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(positionX, 0, 0);
+
+                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThinWidth, 1);
+                    horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, positionY, 0);
+                }
+
+                lines.Add(verticalLine);
+                lines.Add(horizontalLine);
             }
-            else if (index % (dimension) == 1) //Outer edge right & top
-            {
-                verticalLine.GetComponent<RectTransform>().localScale = new Vector3(lineThiccWidth, totalWidth + outerLineAddition, 1);
-                verticalLine.GetComponent<RectTransform>().localPosition = new Vector3((totalWidth / 2.0f), 0, 0);
-
-                horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, lineThiccWidth, 1);
-                horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (totalWidth / 2.0f), 0);
-            }
-            else //Thin lines
-            {
-                verticalLine.GetComponent<RectTransform>().localScale = new Vector3(lineThinWidth, totalWidth + outerLineAddition, 1);
-                verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(((((dimension / 2) - 1) + index) * spacing) - totalWidth, 0, 0);
-
-                horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, lineThinWidth, 1);
-                horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (( ( (dimension / 2) - 1) + index) * spacing) - totalWidth, 0);
-            }
-
-            lines.Add(verticalLine);
-            lines.Add(horizontalLine);
         }
+
+        //for (int index = 0; index <= Dimension; index++)
+        //{
+        //    var verticalLine = Instantiate(linePixel, lineHolder.transform);
+        //    var horizontalLine = Instantiate(linePixel, lineHolder.transform);
+
+        //    if (index == 0) //Outer edge left & bottom
+        //    {
+        //        verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalWidth + outerLineAddition, 1);
+        //        verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(-1 * (totalWidth / 2.0f), 0, 0);
+
+        //        horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThiccWidth, 1);
+        //        horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, -1 * (totalWidth / 2.0f), 0);
+        //    }
+        //    else if (index % (Dimension) == 1) //Outer edge right & top
+        //    {
+        //        verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalWidth + outerLineAddition, 1);
+        //        verticalLine.GetComponent<RectTransform>().localPosition = new Vector3((totalWidth / 2.0f), 0, 0);
+
+        //        horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThiccWidth, 1);
+        //        horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (totalWidth / 2.0f), 0);
+        //    }
+        //    else //Thin lines
+        //    {
+        //        verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThinWidth, totalWidth + outerLineAddition, 1);
+        //        verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(((((Dimension / 2) - 1) + index) * spacing) - totalWidth, 0, 0);
+
+        //        horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThinWidth, 1);
+        //        horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (( ( (Dimension / 2) - 1) + index) * spacing) - totalWidth, 0);
+        //    }
+
+        //    lines.Add(verticalLine);
+        //    lines.Add(horizontalLine);
+        //}
     }
 }

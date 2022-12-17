@@ -4,20 +4,21 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Logic for spawning an empty binary board
-/// - 
 /// </summary>
 
 public class SudokuBoard : MonoBehaviour, IBoard
 {
+    InfoManager info;
+
     private int sizeX = 9;
     private int sizeY = 9;
 
-    public Vector2 dimension { get { return new Vector2(sizeX, sizeY); } set { value = new Vector2(sizeX, sizeY); } }
+    public Vector2 Dimension { get { return new Vector2(sizeX, sizeY); } set { value = new Vector2(sizeX, sizeY); } }
 
     private int dimX;
     private int dimY;
 
-    public bool isBoardSet { get { return false; } set { value = false; } } //false
+    public bool IsBoardSet { get { return false; } set { value = false; } } //false
 
     private float spacing;
 
@@ -28,7 +29,6 @@ public class SudokuBoard : MonoBehaviour, IBoard
     private GridLayoutGroup fieldGrid;
 
     private int totalWidth = 700;
-    private int inputWidth = 50;
 
     [Header("Lines")]
     [SerializeField] private GameObject linePixel;
@@ -36,8 +36,8 @@ public class SudokuBoard : MonoBehaviour, IBoard
     [SerializeField] private GameObject lineHolder;
 
 
-    public int lineThinWidth { get { return 5; } set { value = 5; } }
-    public int lineThiccWidth { get { return 10; } set { value = 10; } }
+    public int LineThinWidth { get { return 5; } set { value = 5; } }
+    public int LineThiccWidth { get { return 10; } set { value = 10; } }
 
 
     private void OnEnable()
@@ -50,7 +50,7 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
         fieldGrid = fieldHolder.GetComponent<GridLayoutGroup>();
 
-        if (!isBoardSet)
+        if (!IsBoardSet)
         {
             CreateBoard();
         }        
@@ -58,18 +58,18 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
     private void Update()
     {
-        dimension = new Vector2(sizeX, sizeY);
+        Dimension = new Vector2(sizeX, sizeY);
 
         CompareValues();
     }
 
-    private void CompareValues()
+    public void CompareValues()
     {
-        if (dimX != dimension.x || dimY != dimension.y) //Dimension changed
+        if (dimX != Dimension.x || dimY != Dimension.y) //Dimension changed
         {
             DeleteBoard();
 
-            if (dimension.y > dimension.x) //Change to fixed row
+            if (Dimension.y > Dimension.x) //Change to fixed row
             {
                 fieldGrid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
                 fieldGrid.constraintCount = sizeY;
@@ -79,7 +79,6 @@ public class SudokuBoard : MonoBehaviour, IBoard
                 fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
                 fieldGrid.constraintCount = sizeX;
             }
-
 
             CreateBoard();
             dimX = sizeX;
@@ -98,14 +97,13 @@ public class SudokuBoard : MonoBehaviour, IBoard
             spacing = totalWidth / sizeY;
         }
 
-
         fieldGrid.cellSize = new Vector2(spacing, spacing);
 
         this.GetComponent<Image>().color = new Color(255, 255, 255, 255); //Switch to a white colour BG colour
 
         SpawnInputFields();
         SpawnLines();
-        isBoardSet = true;
+        IsBoardSet = true;
     }
 
     public void DeleteBoard()
@@ -122,7 +120,7 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
         inputFields.Clear();
         lines.Clear();
-        isBoardSet = false;
+        IsBoardSet = false;
     }
 
     public void SpawnInputFields()
@@ -139,29 +137,29 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
     public void SpawnLines()
     {
-        var outerLineAddition = 10; //The outer lines don't connect in the corners, with this they connect
-
         for (int index = 0; index < 10; index++)
         {
             //Spawn as child
             var lineVertical = Instantiate(linePixel, lineHolder.transform);
             var lineHorizontal = Instantiate(linePixel, lineHolder.transform);
 
-            var position = (index * spacing + (lineThiccWidth / 2)) - (totalWidth / 2);
+            var position = (index * spacing + (LineThiccWidth / 2)) - (totalWidth / 2);
 
             if (index % 3 == 0)
             {
                 //Thicc
-                lineVertical.GetComponent<RectTransform>().localScale = new Vector3(lineThiccWidth, totalWidth, 1);
-                lineHorizontal.GetComponent<RectTransform>().localScale = new Vector3(totalWidth, lineThiccWidth, 1);
+                lineVertical.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalWidth, 1);
+                lineHorizontal.GetComponent<RectTransform>().localScale = new Vector3(totalWidth, LineThiccWidth, 1);
+                
                 lineVertical.GetComponent<RectTransform>().localPosition = new Vector3(position, 0, 0);
                 lineHorizontal.GetComponent<RectTransform>().localPosition = new Vector3(0, position, 0);
             }
             else
             {
                 //Thin
-                lineVertical.GetComponent<RectTransform>().localScale = new Vector3(lineThinWidth, totalWidth, 1);
-                lineHorizontal.GetComponent<RectTransform>().localScale = new Vector3(totalWidth, lineThinWidth, 1);
+                lineVertical.GetComponent<RectTransform>().localScale = new Vector3(LineThinWidth, totalWidth, 1);
+                lineHorizontal.GetComponent<RectTransform>().localScale = new Vector3(totalWidth, LineThinWidth, 1);
+                
                 lineVertical.GetComponent<RectTransform>().localPosition = new Vector3(position, 0, 0);
                 lineHorizontal.GetComponent<RectTransform>().localPosition = new Vector3(0, position, 0);
             }
