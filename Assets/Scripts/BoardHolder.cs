@@ -10,8 +10,6 @@ public class BoardHolder : MonoBehaviour, IHolder
 
     int value;
 
-
-
     private void Start()
     {
         value = 0;

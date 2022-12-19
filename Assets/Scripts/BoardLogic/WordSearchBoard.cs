@@ -55,8 +55,7 @@ public class WordSearchBoard : MonoBehaviour, IBoard
 
         uiHand = FindObjectOfType<UIHandler>();
         uiHand.SetUpSlider(true, true, valueMin, valueMax, sizeX, sizeY);
-
-
+        
         if (!IsBoardSet)
         {
             CreateBoard();
@@ -83,7 +82,6 @@ public class WordSearchBoard : MonoBehaviour, IBoard
             //info manager value change
             info.isValuesChanged = true;
 
-
             if (Dimension.y > Dimension.x) //Change to fixed row
             {
                 fieldGrid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
@@ -94,7 +92,6 @@ public class WordSearchBoard : MonoBehaviour, IBoard
                 fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
                 fieldGrid.constraintCount = sizeX;
             }
-
 
             CreateBoard();
             dimX = sizeX;
@@ -128,7 +125,6 @@ public class WordSearchBoard : MonoBehaviour, IBoard
         {
             Destroy(go);
         }
-
         foreach (GameObject go in lines) //Remove all lines
         {
             Destroy(go);
@@ -154,8 +150,7 @@ public class WordSearchBoard : MonoBehaviour, IBoard
     public void SpawnLines()
     {
         var outerLineAddition = 10; //The outer lines don't connect in the corners, with this they connect
-
-
+        
         for (int indexX = 0; indexX <= Dimension.x; indexX++) //X
         {
             var verticalLine = Instantiate(linePixel, lineHolder.transform);
@@ -166,7 +161,6 @@ public class WordSearchBoard : MonoBehaviour, IBoard
                 
                 var totalWidth = spacing * sizeX;
                 var totalHeight = spacing * sizeY;
-
 
                 if (indexX == 0 || indexY == 0) //Outer edge left & bottom
                 {
@@ -201,10 +195,5 @@ public class WordSearchBoard : MonoBehaviour, IBoard
                 lines.Add(horizontalLine);                
             }
         }
-    }
-
-    public void TestUI(Slider slider)
-    {
-
     }
 }

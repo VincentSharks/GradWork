@@ -59,7 +59,6 @@ public class SudokuBoard : MonoBehaviour, IBoard
     private void Update()
     {
         Dimension = new Vector2(sizeX, sizeY);
-
         CompareValues();
     }
 
@@ -68,17 +67,9 @@ public class SudokuBoard : MonoBehaviour, IBoard
         if (dimX != Dimension.x || dimY != Dimension.y) //Dimension changed
         {
             DeleteBoard();
-
-            if (Dimension.y > Dimension.x) //Change to fixed row
-            {
-                fieldGrid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-                fieldGrid.constraintCount = sizeY;
-            }
-            else
-            {
-                fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-                fieldGrid.constraintCount = sizeX;
-            }
+            
+            fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            fieldGrid.constraintCount = sizeX;
 
             CreateBoard();
             dimX = sizeX;
