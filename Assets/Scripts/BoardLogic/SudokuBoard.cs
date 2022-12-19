@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class SudokuBoard : MonoBehaviour, IBoard
 {
-    InfoManager info;
-
     private int sizeX = 9;
     private int sizeY = 9;
 
@@ -25,6 +23,7 @@ public class SudokuBoard : MonoBehaviour, IBoard
     [Header("Fields")]
     [SerializeField] private GameObject inputBox;
     private List<GameObject> inputFields = new List<GameObject>();
+    public List<GameObject> InputFields { get { return inputFields; } set { value = inputFields; } }
     [SerializeField] private GameObject fieldHolder;
     private GridLayoutGroup fieldGrid;
 
@@ -154,6 +153,9 @@ public class SudokuBoard : MonoBehaviour, IBoard
                 lineVertical.GetComponent<RectTransform>().localPosition = new Vector3(position, 0, 0);
                 lineHorizontal.GetComponent<RectTransform>().localPosition = new Vector3(0, position, 0);
             }
+
+            lines.Add(lineVertical);
+            lines.Add(lineHorizontal);
         }
     }
 }

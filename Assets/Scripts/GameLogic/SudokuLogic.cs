@@ -31,16 +31,21 @@ using UnityEngine;
 /// </summary>
 
 
-public class SudokuLogic : MonoBehaviour
+public class SudokuLogic : MonoBehaviour, IPuzzleLogic
 {
     //hold list with all possibilities 
     //
 
-    private List<int> list = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    private List<int> possibleInputs = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    public List<int> PossibleInputs { get { return possibleInputs; } set { value = possibleInputs; } }
 
-    private void Start()
+    //Have list of possible inputs
+    //get list of input fields
+    //
+
+    private void OnEnable()
     {
-        Debug.Log(list.Count);
+        //fields = board.inputFields;
     }
 
 

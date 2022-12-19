@@ -16,9 +16,14 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private TMP_Text selectedPuzzle;
     [SerializeField] private TMP_Text boardSize;
 
+    [SerializeField] private TMP_Text selectedAlgorithm;
+    [SerializeField] private TMP_Text algorithmVersion;
+
+
     [Header("UI")]
     [SerializeField] private GameObject xSlider;
     [SerializeField] private GameObject ySlider;
+    [SerializeField] private GameObject runButton;
 
     private void Awake()
     {
@@ -27,13 +32,21 @@ public class UIHandler : MonoBehaviour
 
     private void Update()
     {
-        SetBoardInfoUI();   
+        SetBoardInfoUI();
+        SetAlgorithmInfoUI();
+        SetUpRunButton();
     }
 
     private void SetBoardInfoUI()
     {
         selectedPuzzle.text = " " + info.puzzleName;
         boardSize.text = " [X:" + info.boardSize.x + ", Y: " + info.boardSize.y + "]";
+    }
+
+    private void SetAlgorithmInfoUI()
+    {
+        selectedAlgorithm.text = " " + info.algorithmName;
+        algorithmVersion.text = " v." + info.algorithmVersion;
     }
 
     public void SetUpSlider(bool enable, bool enableY, int sliderMin, int sliderMax, int valueX, int valueY)
@@ -67,5 +80,16 @@ public class UIHandler : MonoBehaviour
     public int GetYSliderValue()
     {
         return (int)ySlider.GetComponent<Slider>().value;
+    }
+
+    private void SetUpRunButton()
+    {
+        if(!info.isPuzzleSelected || !info.isAlgorithmSelected)
+        {
+            runButton.SetActive(false);
+            return;
+        }
+
+        runButton.SetActive(true);
     }
 }

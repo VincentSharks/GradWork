@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class BinaryLogic : MonoBehaviour
+public class BinaryLogic : MonoBehaviour, IPuzzleLogic
 {
     //
 
@@ -9,4 +10,7 @@ public class BinaryLogic : MonoBehaviour
 
     //SOLUTION: 
     //
+
+    private List<int> possibleInputs = new List<int>() { 0, 1 };
+    public List<int> PossibleInputs { get { return possibleInputs; } set { value = possibleInputs; } }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2122287833132499360}
   - component: {fileID: 2122287833132499361}
   - component: {fileID: 4369942239286757944}
+  - component: {fileID: 8269302318691065711}
   m_Layer: 5
   m_Name: WordSearchBoard
   m_TagString: Untagged
@@ -91,12 +92,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db9a0ce766099b849a4608bddaeed9b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeX: 0
-  sizeY: 0
   inputBox: {fileID: 1694884163779530002, guid: 11b7b385d538d9f4e9c7342345398d3f, type: 3}
   fieldHolder: {fileID: 2549931920196724354}
   linePixel: {fileID: 4843845494221163040, guid: 76c5601fea3b4084f946b317c48ada3a, type: 3}
   lineHolder: {fileID: 5325466315161809414}
+--- !u!114 &8269302318691065711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122287833132499391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537d3511915df434eb409c777d126d4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2549931920196724354
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SuguruLogic : MonoBehaviour
+public class SuguruLogic : MonoBehaviour, IPuzzleLogic
 {
     //numbers 1-5
     //http://sugurulines.com/suguru-puzzle-rules.html
@@ -14,4 +15,7 @@ public class SuguruLogic : MonoBehaviour
 
     //SOLUTION: 
     //https://pzl.org.uk/suguru.html?
+
+    private List<int> possibleInputs = new List<int>() { 1, 2, 3, 4, 5 };
+    public List<int> PossibleInputs { get { return possibleInputs; } set { value = possibleInputs; } }
 }

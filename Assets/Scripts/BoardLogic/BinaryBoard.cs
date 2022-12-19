@@ -29,7 +29,8 @@ public class BinaryBoard : MonoBehaviour, IBoard
 
     [Header("Fields")]
     [SerializeField] GameObject inputBox;
-    List<GameObject> inputFields = new List<GameObject>();
+    private List<GameObject> inputFields = new List<GameObject>();
+    public List<GameObject> InputFields { get { return inputFields; } set { value = inputFields; } }
     [SerializeField] GameObject fieldHolder;
     private GridLayoutGroup fieldGrid;
 

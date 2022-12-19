@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 5247715711662339528}
   - component: {fileID: 5247715711662339529}
   - component: {fileID: 880080586402076737}
+  - component: {fileID: 3372625722952937763}
   m_Layer: 5
   m_Name: SuguruBoard
   m_TagString: Untagged
@@ -192,3 +193,15 @@ MonoBehaviour:
   fieldHolder: {fileID: 5247715710520428332}
   linePixel: {fileID: 4843845494221163040, guid: 76c5601fea3b4084f946b317c48ada3a, type: 3}
   lineHolder: {fileID: 5247715710169438411}
+--- !u!114 &3372625722952937763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5247715711662339531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc463c8732c0d646a5cbb521133b5a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

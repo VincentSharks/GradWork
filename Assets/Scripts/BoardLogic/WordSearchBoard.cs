@@ -24,7 +24,8 @@ public class WordSearchBoard : MonoBehaviour, IBoard
 
     [Header("Fields")]
     [SerializeField] GameObject inputBox;
-    List<GameObject> inputFields = new List<GameObject>();
+    private List<GameObject> inputFields = new List<GameObject>();
+    public List<GameObject> InputFields { get { return inputFields; } set { value = inputFields; } }
     [SerializeField] GameObject fieldHolder;
     private GridLayoutGroup fieldGrid;
 
@@ -38,8 +39,9 @@ public class WordSearchBoard : MonoBehaviour, IBoard
     public int LineThinWidth { get { return 5; } set { value = 5; } }
     public int LineThiccWidth { get { return 10; } set { value = 10; } }
 
-    [Header("Words")]
-    int test = 0;
+
+    //[Header("Words")]
+    //int test = 0;
 
     private void OnEnable()
     {

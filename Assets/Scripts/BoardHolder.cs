@@ -1,13 +1,11 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 //Holds the logic to spawn the 
 
 public class BoardHolder : MonoBehaviour, IHolder
 {
     [SerializeField] GameObject boardSelection;
-
     int value;
 
     private void Start()

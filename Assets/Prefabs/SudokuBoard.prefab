@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 7498297614533217293}
   - component: {fileID: 7498297614533217294}
   - component: {fileID: 7498297614533217292}
+  - component: {fileID: 6927409241707635099}
   m_Layer: 5
   m_Name: SudokuBoard
   m_TagString: Untagged
@@ -192,3 +193,15 @@ MonoBehaviour:
   fieldHolder: {fileID: 5852049069530636485}
   linePixel: {fileID: 4843845494221163040, guid: 76c5601fea3b4084f946b317c48ada3a, type: 3}
   lineHolder: {fileID: 3531852520339223624}
+--- !u!114 &6927409241707635099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7498297614533217280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07384734c681af4486ca9ebc29a841c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -15,6 +16,7 @@ public interface IBoard
     int LineThiccWidth { get; set; }
     int LineThinWidth { get; set; }
 
+    List<GameObject> InputFields { get; set; }
 
     //Create Board function
     void CompareValues();

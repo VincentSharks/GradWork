@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 /// <summary>
 /// get list of possible input
@@ -8,32 +9,52 @@ using UnityEngine;
 /// export and repeat
 /// </summary>
 
-public class Bogosort : MonoBehaviour
+public class Bogosort : MonoBehaviour, IAlgorithm
 {
-    private int count;
-    private List<int> inputs;    
+    //interface
+    //empty constructur
+    //
 
-    public Bogosort(List<int> possibleInput)
+
+    public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } set { value = FindObjectOfType<InfoManager>(); } }
+    public List<int> Inputs { get { return Info.possibleInputs; } set { value = Info.possibleInputs; } }
+    public int Count { get { return Inputs.Count; } set { value = Inputs.Count; } }
+    public List<GameObject> Fields { get { return Info.inputFields; } set { value = Info.inputFields; } }
+    public int AlgorithmVersion { get { return Info.algorithmVersion; } set { value = Info.algorithmVersion; } }
+
+    public void Init(List<GameObject> inputFields, List<int> possibleInput)
     {
-        count = possibleInput.Count;
-        inputs = possibleInput;
+        Count = possibleInput.Count;
+        Inputs = possibleInput;
+        Fields = inputFields;
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        inputs = new List<int>();
-        Random.seed = System.DateTime.Now.Millisecond;
-    }
+        Info = FindObjectOfType<InfoManager>();
+        Random.seed = Info.RandomSeed;
 
-    public void Calculate()
-    {
-        GetRandom();
+        Inputs = new List<int>();
+        Fields = new List<GameObject>();    
     }
 
     private int GetRandom()
     {
-        var random = Random.Range(0, count-1);
-        var output = inputs[random];
+        var random = Random.Range(0, Count);
+        var output = Inputs[random];
         return output;
+    }
+
+    private void FillInField()
+    {
+        for(int i = 0; i < Fields.Count; i++) //Go over all fields
+        {
+            Fields[i].gameObject.GetComponent<TMP_InputField>().text = GetRandom().ToString();
+        }
+    }
+
+    public void Run()
+    {
+        FillInField();
     }
 }

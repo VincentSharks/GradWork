@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 1748092973493925101}
   - component: {fileID: 1748092973493925090}
   - component: {fileID: 1748092973493925100}
+  - component: {fileID: 8381099647323557407}
   m_Layer: 5
   m_Name: BinaryBoard
   m_TagString: Untagged
@@ -152,11 +153,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc584275145f18d4885028fedb6f0ecc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dimension: 0
   inputBox: {fileID: 1694884163779530002, guid: 11b7b385d538d9f4e9c7342345398d3f, type: 3}
   fieldHolder: {fileID: 1524555172499739803}
   linePixel: {fileID: 4843845494221163040, guid: 76c5601fea3b4084f946b317c48ada3a, type: 3}
   lineHolder: {fileID: 3752797069362091452}
+--- !u!114 &8381099647323557407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748092973493925088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed579ffaf450f2242b71757d3bc20f5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3752797069362091452
 GameObject:
   m_ObjectHideFlags: 0
