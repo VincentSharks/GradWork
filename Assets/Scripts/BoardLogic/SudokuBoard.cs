@@ -20,6 +20,9 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
     private float spacing;
 
+    UIHandler uiHand;
+    InfoManager info;
+
     [Header("Fields")]
     [SerializeField] private GameObject inputBox;
     private List<GameObject> inputFields = new List<GameObject>();
@@ -49,6 +52,9 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
         fieldGrid = fieldHolder.GetComponent<GridLayoutGroup>();
 
+        uiHand = FindObjectOfType<UIHandler>();
+        uiHand.SetUpSlider(false, false, 0, 1, sizeX, sizeY);
+
         if (!IsBoardSet)
         {
             CreateBoard();
@@ -71,6 +77,8 @@ public class SudokuBoard : MonoBehaviour, IBoard
             fieldGrid.constraintCount = sizeX;
 
             CreateBoard();
+
+            fieldHolder.gameObject.SetActive(true);
             dimX = sizeX;
             dimY = sizeY;
         }
@@ -78,6 +86,7 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
     public void CreateBoard()
     {
+        fieldHolder.gameObject.SetActive(false); //Disable input field parent, so that the spawn in bug is fixed
         if (sizeX > sizeY)
         {
             spacing = totalWidth / sizeX;
@@ -90,10 +99,11 @@ public class SudokuBoard : MonoBehaviour, IBoard
         fieldGrid.cellSize = new Vector2(spacing, spacing);
 
         this.GetComponent<Image>().color = new Color(255, 255, 255, 255); //Switch to a white colour BG colour
-
+        
         SpawnInputFields();
         SpawnLines();
-        IsBoardSet = true;
+        
+        IsBoardSet = true;        
     }
 
     public void DeleteBoard()
