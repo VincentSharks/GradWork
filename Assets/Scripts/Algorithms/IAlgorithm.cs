@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public interface IAlgorithm
 {
@@ -14,4 +15,7 @@ public interface IAlgorithm
     void Init(List<GameObject> inputFields, List<int> possibleInput);
 
     void Run();
+
+    //End event
+    UnityEvent AlgorithmEnd { get; set; }
 }

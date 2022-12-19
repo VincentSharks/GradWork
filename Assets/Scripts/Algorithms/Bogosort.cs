@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 /// <summary>
 /// get list of possible input
@@ -11,16 +12,17 @@ using TMPro;
 
 public class Bogosort : MonoBehaviour, IAlgorithm
 {
-    //interface
-    //empty constructur
-    //
-
-
     public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } set { value = FindObjectOfType<InfoManager>(); } }
     public List<int> Inputs { get { return Info.possibleInputs; } set { value = Info.possibleInputs; } }
     public int Count { get { return Inputs.Count; } set { value = Inputs.Count; } }
     public List<GameObject> Fields { get { return Info.inputFields; } set { value = Info.inputFields; } }
     public int AlgorithmVersion { get { return Info.algorithmVersion; } set { value = Info.algorithmVersion; } }
+
+
+    private UnityEvent algorithmEnd = new UnityEvent();
+    public UnityEvent AlgorithmEnd { get { return algorithmEnd; } set { value = algorithmEnd; } }
+
+
 
     public void Init(List<GameObject> inputFields, List<int> possibleInput)
     {
@@ -31,6 +33,12 @@ public class Bogosort : MonoBehaviour, IAlgorithm
 
     private void OnEnable()
     {
+        if(algorithmEnd == null)
+        {
+            algorithmEnd = new UnityEvent();
+        }
+
+
         Info = FindObjectOfType<InfoManager>();
         Random.seed = Info.RandomSeed;
 
@@ -56,5 +64,6 @@ public class Bogosort : MonoBehaviour, IAlgorithm
     public void Run()
     {
         FillInField();
+        algorithmEnd.Invoke();
     }
 }
