@@ -4,11 +4,14 @@ using UnityEngine;
 public class AlgorithmHolder : MonoBehaviour, IHolder
 {
     [SerializeField] GameObject algorithmSelection;
+    InfoManager info;
     int value;
 
 
     private void Start()
     {
+        info = FindObjectOfType<InfoManager>();
+
         value = 0;
         DisableAllChilds();
     }
@@ -24,6 +27,7 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
         for (int i = 0; i < this.transform.childCount; i++)
         {
             this.transform.GetChild(i).gameObject.SetActive(false);
+            info.isAlgorithmSet = false;
         }
     }
 
@@ -48,7 +52,8 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
             case 0:
                 break; //None selected
             case 1:
-                this.transform.GetChild(index - 1).gameObject.SetActive(true);
+                this.transform.GetChild(index - 1).gameObject.SetActive(true); //Bogosort
+                info.isAlgorithmSet = true;
                 break;
         }
     }

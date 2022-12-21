@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.Events;
+using System;
 
 /// <summary>
 /// Gather all the info from other scripts
@@ -35,10 +37,17 @@ public class InfoManager : MonoBehaviour
     public bool isPuzzleSelected = false;
     public bool isAlgorithmSelected = false;
 
+    public bool isAlgorithmSet = false;
+
+    //Timer
+    public DateTime startAlgorithmTime;
+    public DateTime endAlgorithmTime;
+    public TimeSpan elapsedTime;
+
 
     private void Awake()
     {
-        RandomSeed = Random.seed = System.DateTime.Now.Millisecond;
+        RandomSeed = UnityEngine.Random.seed = System.DateTime.Now.Millisecond;
     }
 
     private void OnEnable()
@@ -95,7 +104,7 @@ public class InfoManager : MonoBehaviour
     }
 
     private void GetAlgorithmInfo()
-    {
+    {        
         var dropdown = algorithDropDown.GetComponent<TMP_Dropdown>();
         var selectedID = dropdown.value;
         
@@ -107,16 +116,36 @@ public class InfoManager : MonoBehaviour
 
         algorithmName = dropdown.options[selectedID].text;
 
-        //Get active algorithm
-        activeAlgorithm = algorithmHolder.transform.GetChild(selectedID - 1).gameObject;
-        algorithmVersion = activeAlgorithm.GetComponent<IAlgorithm>().AlgorithmVersion;
+        //set active?
+        var algorithmComponent = algorithmHolder.GetComponentInChildren<IAlgorithm>();
+
+        if(isAlgorithmSet)
+        {
+            algorithmVersion = algorithmComponent.AlgorithmVersion;
+        }
 
         isAlgorithmSelected = true;
+        isAlgorithmSet = true;
     }
 
     public void RunCombo() //Run button
     {
-        Debug.Log("Run Combo: " + puzzleName + " + " + algorithmName);
-        activeAlgorithm.GetComponent<IAlgorithm>().Run();
+        var algorithmComponent = algorithmHolder.GetComponentInChildren<IAlgorithm>();
+        algorithmComponent.Run();
+        GetElapsedTime();
+    }
+
+    private void GetElapsedTime()
+    {
+        elapsedTime = endAlgorithmTime - startAlgorithmTime;
+    }
+
+
+    private void ExportData()
+    {
+        //Get all the info and put it here
+        //set it all ready to be put into a CSV file
+
+
     }
 }

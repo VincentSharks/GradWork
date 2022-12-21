@@ -17,7 +17,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private TMP_Text boardSize;
 
     [SerializeField] private TMP_Text selectedAlgorithm;
-    [SerializeField] private TMP_Text algorithmVersion;
+    [SerializeField] private TMP_Text randomSeed;
 
 
     [Header("UI")]
@@ -34,6 +34,7 @@ public class UIHandler : MonoBehaviour
     {
         SetBoardInfoUI();
         SetAlgorithmInfoUI();
+        SetOtherInfoUI();
         SetUpRunButton();
     }
 
@@ -45,8 +46,12 @@ public class UIHandler : MonoBehaviour
 
     private void SetAlgorithmInfoUI()
     {
-        selectedAlgorithm.text = " " + info.algorithmName;
-        algorithmVersion.text = " v." + info.algorithmVersion;
+        selectedAlgorithm.text = " " + info.algorithmName + " " + " v." + info.algorithmVersion;
+    }
+
+    private void SetOtherInfoUI()
+    {
+        randomSeed.text = " " + info.RandomSeed;
     }
 
     public void SetUpSlider(bool enable, bool enableY, int sliderMin, int sliderMax, int valueX, int valueY)
