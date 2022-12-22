@@ -10,7 +10,7 @@ public class WordSearchBoard : MonoBehaviour, IBoard
     int sizeX;
     int sizeY;
 
-    public Vector2 Dimension { get { return new Vector2(sizeX, sizeY); } set { value = new Vector2(sizeX, sizeY); } }
+    public Vector2 Dimensions { get { return new Vector2(sizeX, sizeY); } set { value = new Vector2(sizeX, sizeY); } }
 
     int dimX;
     int dimY;
@@ -75,16 +75,16 @@ public class WordSearchBoard : MonoBehaviour, IBoard
         sizeX = uiHand.GetXSliderValue();
         sizeY = uiHand.GetYSliderValue();
 
-        Dimension = new Vector2(sizeX, sizeY);
+        Dimensions = new Vector2(sizeX, sizeY);
 
-        if (dimX != Dimension.x || dimY != Dimension.y) //Dimension changed
+        if (dimX != Dimensions.x || dimY != Dimensions.y) //Dimension changed
         {
             DeleteBoard();
 
             //info manager value change
             info.isValuesChanged = true;
 
-            if (Dimension.y > Dimension.x) //Change to fixed row
+            if (Dimensions.y > Dimensions.x) //Change to fixed row
             {
                 fieldGrid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
                 fieldGrid.constraintCount = sizeY;
@@ -153,11 +153,11 @@ public class WordSearchBoard : MonoBehaviour, IBoard
     {
         var outerLineAddition = 10; //The outer lines don't connect in the corners, with this they connect
         
-        for (int indexX = 0; indexX <= Dimension.x; indexX++) //X
+        for (int indexX = 0; indexX <= Dimensions.x; indexX++) //X
         {
             var verticalLine = Instantiate(linePixel, lineHolder.transform);
 
-            for(int indexY = 0; indexY <= Dimension.y; indexY++)
+            for(int indexY = 0; indexY <= Dimensions.y; indexY++)
             {
                 var horizontalLine = Instantiate(linePixel, lineHolder.transform);
                 
@@ -173,7 +173,7 @@ public class WordSearchBoard : MonoBehaviour, IBoard
                     horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, -1 * (totalHeight / 2.0f), 0);
                     
                 }
-                else if(indexX % (Dimension.x) == 1 || indexY % (Dimension.y) == 1)
+                else if(indexX % (Dimensions.x) == 1 || indexY % (Dimensions.y) == 1)
                 {
                     verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3((totalWidth / 2.0f), 0, 0);
@@ -183,8 +183,8 @@ public class WordSearchBoard : MonoBehaviour, IBoard
                 }
                 else
                 {
-                    var positionX = ((((Dimension.x / 2) - 1) + indexX) * spacing) - totalWidth;
-                    var positionY = ((((Dimension.y / 2) - 1) + indexY) * spacing) - totalHeight;
+                    var positionX = ((((Dimensions.x / 2) - 1) + indexX) * spacing) - totalWidth;
+                    var positionY = ((((Dimensions.y / 2) - 1) + indexY) * spacing) - totalHeight;
 
                     verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThinWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(positionX, 0, 0);

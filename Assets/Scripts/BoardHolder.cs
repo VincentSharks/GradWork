@@ -1,22 +1,24 @@
 using UnityEngine;
 using TMPro;
 
-//Holds the logic to spawn the 
+/// <summary>
+/// Logic for the BoardHolder parent object in the hierarchy
+/// </summary>
 
 public class BoardHolder : MonoBehaviour, IHolder
 {
-    [SerializeField] GameObject boardSelection;
-    int value;
+    [SerializeField] private GameObject _boardSelection;
+    private int _value;
 
     private void Start()
     {
-        value = 0;
+        _value = 0;
         DisableAllChilds();
     }
 
     private void Update()
     {
-        int value = boardSelection.GetComponent<TMP_Dropdown>().value;
+        int value = _boardSelection.GetComponent<TMP_Dropdown>().value;
         CompareValue(value);
     }
 
@@ -30,15 +32,15 @@ public class BoardHolder : MonoBehaviour, IHolder
 
     public void CompareValue(int value)
     {
-        if(this.value != value)
+        if(_value != value)
         {
-            if(this.value != 0) 
+            if(_value != 0) 
             {
-                this.transform.GetChild(this.value - 1).gameObject.SetActive(false);
+                this.transform.GetChild(this._value - 1).gameObject.SetActive(false);
             }
             
             SwitchChild(value);
-            this.value = value;
+            _value = value;
         }
     }
 

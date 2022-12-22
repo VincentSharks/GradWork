@@ -11,23 +11,20 @@ using UnityEngine;
 
 public interface IBoard
 {
-    Vector2 Dimension { get; set; } //Dimensions
-    bool IsBoardSet { get; set; } //True when board is placed (stops loops)
-    int LineThiccWidth { get; set; }
-    int LineThinWidth { get; set; }
+    public Vector2 Dimensions { get; } //Dimensions
+    public bool IsBoardSet { get; } //True when board is placed (stops loops)
+    public int LineThiccWidth { get; }
+    public int LineThinWidth { get; }
 
-    List<GameObject> InputFields { get; set; }
+    public List<GameObject> InputFields { get; }
 
     //Create Board function
-    void CompareValues();
-    void CreateBoard();
-    void DeleteBoard();
+    public void CompareValues();
+    public void CreateBoard();
+    public void DeleteBoard();
 
-    void SpawnInputFields();
-    void SpawnLines();
+    public void SpawnInputFields();
+    public void SpawnLines();
 
     //Fill Board function
-
-    //Begin Event
-    //End Event
 }

@@ -5,52 +5,32 @@ using UnityEngine.Events;
 using System;
 
 /// <summary>
-/// get list of possible input
-/// random number
-/// get that index from the list
-/// export and repeat
+/// Logic for the Bogosort algorithm (Version 1)
 /// </summary>
 
 public class Bogosort : MonoBehaviour, IAlgorithm
 {
-    public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } set { value = FindObjectOfType<InfoManager>(); } }
-    public List<int> Inputs { get { return Info.possibleInputs; } set { value = Info.possibleInputs; } }
-    public int Count { get { return Inputs.Count; } set { value = Inputs.Count; } }
-    public List<GameObject> Fields { get { return Info.inputFields; } set { value = Info.inputFields; } }
-    public int AlgorithmVersion { get { return 1; } set { value = 1; } }
+    public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } }
+    private List<int> _inputs = new List<int>();
+    public List<int> Inputs { get { return _inputs; } }
+    public int Count { get { return Inputs.Count; } }
+    private List<GameObject> _fields = new List<GameObject>();
+    public List<GameObject> Fields { get { return _fields; } }
+    private int _algorithmVersion = 1;
+    public int AlgorithmVersion { get { return _algorithmVersion; } }
 
 
-    private UnityEvent algorithmEnd = new UnityEvent();
-    public UnityEvent AlgorithmEnd { get { return algorithmEnd; } set { value = algorithmEnd; } }
+    private UnityEvent _algorithmEnd = new UnityEvent();
+    public UnityEvent AlgorithmEnd { get { return _algorithmEnd; } }
 
-    private UnityEvent algorithmStart = new UnityEvent();
-    public UnityEvent AlgorithmStart { get { return algorithmStart; } set { value = algorithmStart; } }
+    private UnityEvent _algorithmStart = new UnityEvent();
+    public UnityEvent AlgorithmStart { get { return _algorithmStart; } }
 
-    public void Init(List<GameObject> inputFields, List<int> possibleInput)
-    {
-        Count = possibleInput.Count;
-        Inputs = possibleInput;
-        Fields = inputFields;
-    }
 
     private void OnEnable()
     {
-        if(algorithmEnd == null)
-        {
-            algorithmEnd = new UnityEvent();
-        }
-
-        if (algorithmStart == null)
-        {
-            algorithmStart = new UnityEvent();
-        }
-
-
-        Info = FindObjectOfType<InfoManager>();
-        UnityEngine.Random.seed = Info.RandomSeed;
-
-        Inputs = new List<int>();
-        Fields = new List<GameObject>();    
+        _inputs = Info.possibleInputs;
+        _fields = Info.inputFields;
     }
 
     private int GetRandom()
@@ -62,20 +42,20 @@ public class Bogosort : MonoBehaviour, IAlgorithm
 
     private void FillInField()
     {
-        for(int i = 0; i < Fields.Count; i++) //Go over all fields
+        for (int i = 0; i < Fields.Count; i++) //Go over all fields
         {
             Fields[i].gameObject.GetComponent<TMP_InputField>().text = GetRandom().ToString();
         }
-
-        Info.endAlgorithmTime = DateTime.Now;
     }
 
     public void Run()
     {
-        algorithmStart.Invoke();
+        _algorithmStart.Invoke();
         Info.startAlgorithmTime = DateTime.Now;
         
         FillInField();
-        algorithmEnd.Invoke();
+
+        Info.endAlgorithmTime = DateTime.Now;
+        _algorithmEnd.Invoke();
     }
 }

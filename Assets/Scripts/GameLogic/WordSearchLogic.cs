@@ -4,31 +4,40 @@ using TMPro;
 using UnityEngine.Events;
 using System.Linq;
 
+/// <summary>
+/// 
+/// </summary>
+
 public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
 {
-    private UnityEvent algorithmEndEvent;
-    private InfoManager info;
+    private InfoManager _info;
+    private UnityEvent _algorithmEndEvent;
 
-    private List<GameObject> inputFields = new List<GameObject>();
+    private List<GameObject> _inputFields = new List<GameObject>();
+    
+    private List<int> _possibleInputs = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 };
+    public List<int> PossibleInputs { get { return _possibleInputs; } set { value = _possibleInputs; } }
 
-    private List<int> possibleInputs = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 };
-    public List<int> PossibleInputs { get { return possibleInputs; } set { value = possibleInputs; } }
+    private List<string> _shortWordsInput = new List<string>() { };
+    private List<string> _longWordsInput = new List<string>() { };
 
 
     private void OnEnable()
     {
-        //Info
-        info = FindObjectOfType<InfoManager>(); //Get list
+        _info = FindObjectOfType<InfoManager>();
 
         //Algorithm End Event
         var algorithmHolder = FindObjectOfType<AlgorithmHolder>();
-        algorithmEndEvent = algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
-        algorithmEndEvent.AddListener(() => ChangeToLetters(inputFields));
+
+        //if algorithm is selected
+
+        _algorithmEndEvent = algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
+        _algorithmEndEvent.AddListener(() => ChangeToLetters(_inputFields));
     }
 
     private void Update()
     {
-        inputFields = info.inputFields;
+        _inputFields = _info.inputFields;
     }
 
     private void ChangeToLetters(List<GameObject> filledInFields)

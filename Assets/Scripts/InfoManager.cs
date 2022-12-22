@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.Events;
 using System;
 
 /// <summary>
@@ -11,11 +10,11 @@ using System;
 public class InfoManager : MonoBehaviour
 {
     [Header("Board")]
-    [SerializeField] GameObject PuzzleDropDown;
+    [SerializeField] private GameObject PuzzleDropDown;
     public string puzzleName;
     
-    [SerializeField] GameObject boardHolder;
-    GameObject activeBoard;
+    [SerializeField] private GameObject boardHolder;
+    private GameObject activeBoard;
     public Vector2 boardSize;
 
     public List<GameObject> inputFields;
@@ -24,11 +23,10 @@ public class InfoManager : MonoBehaviour
     public List<int> possibleInputs;
 
     [Header("Algorithm")]
-    [SerializeField] GameObject algorithDropDown;
+    [SerializeField] private GameObject algorithDropDown;
     public string algorithmName;
 
-    [SerializeField] GameObject algorithmHolder;
-    GameObject activeAlgorithm;
+    [SerializeField] private GameObject algorithmHolder;
     public int algorithmVersion;
 
     public int RandomSeed { get; private set; }
@@ -47,7 +45,9 @@ public class InfoManager : MonoBehaviour
 
     private void Awake()
     {
-        RandomSeed = UnityEngine.Random.seed = System.DateTime.Now.Millisecond;
+        RandomSeed = DateTime.Now.Millisecond;
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+        algorithmVersion = 0;
     }
 
     private void OnEnable()
@@ -65,6 +65,8 @@ public class InfoManager : MonoBehaviour
     {
         if(isValuesChanged)
         {
+
+
             //Check info
             GetBoardInfo();
             GetAlgorithmInfo();
@@ -87,9 +89,15 @@ public class InfoManager : MonoBehaviour
 
         puzzleName = dropdown.options[selectedID].text;
 
+
+
+
+
+
+
         //Get active board
         activeBoard = boardHolder.transform.GetChild(selectedID - 1).gameObject;
-        boardSize = activeBoard.GetComponent<IBoard>().Dimension;
+        boardSize = activeBoard.GetComponent<IBoard>().Dimensions;
 
         inputFields = activeBoard.GetComponent<IBoard>().InputFields;
 
@@ -111,19 +119,19 @@ public class InfoManager : MonoBehaviour
         if(selectedID <= 0)
         {
             isAlgorithmSelected = false;
+            isAlgorithmSet = false;
             return;
         }
 
         algorithmName = dropdown.options[selectedID].text;
 
-        //set active?
         var algorithmComponent = algorithmHolder.GetComponentInChildren<IAlgorithm>();
 
-        if(isAlgorithmSet)
+        if (algorithmComponent != null)
         {
             algorithmVersion = algorithmComponent.AlgorithmVersion;
-        }
-
+        }        
+        
         isAlgorithmSelected = true;
         isAlgorithmSet = true;
     }

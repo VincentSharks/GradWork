@@ -1,24 +1,28 @@
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Logic for the AlgorithmHolder parent object in the hierarchy
+/// </summary>
+
 public class AlgorithmHolder : MonoBehaviour, IHolder
 {
-    [SerializeField] GameObject algorithmSelection;
-    InfoManager info;
-    int value;
+    [SerializeField] private GameObject _algorithmSelection;
+    private InfoManager _info;
+    private int _value;
 
 
     private void Start()
     {
-        info = FindObjectOfType<InfoManager>();
+        _info = FindObjectOfType<InfoManager>();
 
-        value = 0;
+        _value = 0;
         DisableAllChilds();
     }
 
     private void Update()
     {
-        int value = algorithmSelection.GetComponent<TMP_Dropdown>().value;
+        int value = _algorithmSelection.GetComponent<TMP_Dropdown>().value;
         CompareValue(value);
     }
 
@@ -27,21 +31,21 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
         for (int i = 0; i < this.transform.childCount; i++)
         {
             this.transform.GetChild(i).gameObject.SetActive(false);
-            info.isAlgorithmSet = false;
+            _info.isAlgorithmSet = false;
         }
     }
 
     public void CompareValue(int value)
     {
-        if (this.value != value)
+        if (_value != value)
         {
-            if (this.value != 0)
+            if (_value != 0)
             {
-                this.transform.GetChild(this.value - 1).gameObject.SetActive(false);
+                this.transform.GetChild(_value - 1).gameObject.SetActive(false);
             }
 
             SwitchChild(value);
-            this.value = value;
+            _value = value;
         }
     }
 
@@ -53,7 +57,7 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
                 break; //None selected
             case 1:
                 this.transform.GetChild(index - 1).gameObject.SetActive(true); //Bogosort
-                info.isAlgorithmSet = true;
+                _info.isAlgorithmSet = true;
                 break;
         }
     }

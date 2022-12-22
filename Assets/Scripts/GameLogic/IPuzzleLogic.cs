@@ -1,8 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public interface IPuzzleLogic
 {
-    List<int> PossibleInputs { get; set; }
+    /// <summary> List with all the possibly inputs (in int form E.G. Sudoku = 1-9, Word Search 1-26, ...) </summary>
+    public List<int> PossibleInputs { get; }
+
+    //Correctness check
 }

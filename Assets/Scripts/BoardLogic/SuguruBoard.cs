@@ -9,56 +9,52 @@ using UnityEngine.UI;
 
 public class SuguruBoard : MonoBehaviour, IBoard
 {
-    int valueMin = 2;
-    int valueMax = 12;
+    [Header("Other Info")]
+    private UIHandler _uiHand;
+    private InfoManager _info;
+    private bool _isBoardSet = false;
+    public bool IsBoardSet { get { return _isBoardSet; } }
 
-    int sizeX;
-    int sizeY;
+    [Header("Board Dimensions")]
+    private int _valueMin = 2;
+    private int _valueMax = 14;
 
-    public Vector2 Dimension { get { return new Vector2(sizeX, sizeY); } set { value = new Vector2(sizeX, sizeY); } }
+    private int _sizeX = 2;
+    private int _sizeY = 2;
 
-    int dimX;
-    int dimY;
+    public Vector2 Dimensions { get { return new Vector2(_sizeX, _sizeY); } }
 
-    public bool IsBoardSet { get { return false; } set { value = false; } } //false
-
-    float spacing;
-
-    UIHandler uiHand;
-    InfoManager info;
+    private Vector2 _dimensions;
+    private float _spacing;
+    private int _totalWidth = 700;
 
     [Header("Fields")]
-    [SerializeField] GameObject inputBox;
-    private List<GameObject> inputFields = new List<GameObject>();
-    public List<GameObject> InputFields { get { return inputFields; } set { value = inputFields; } }
-    [SerializeField] GameObject fieldHolder;
-    private GridLayoutGroup fieldGrid;
+    [SerializeField] private GameObject _inputBox;
+    private List<GameObject> _inputFields = new List<GameObject>();
+    public List<GameObject> InputFields { get { return _inputFields; } }
+    [SerializeField] private GameObject _fieldHolder;
+    private GridLayoutGroup _fieldGrid;
 
-    int totalWidth = 700;
 
     [Header("Lines")]
-    [SerializeField] GameObject linePixel;
-    List<GameObject> lines = new List<GameObject>();
-    [SerializeField] GameObject lineHolder;
+    [SerializeField] private GameObject _linePixel;
+    private List<GameObject> _lines = new List<GameObject>();
+    [SerializeField] private GameObject _lineHolder;
 
-    public int LineThinWidth { get { return 5; } set { value = 5; } }
-    public int LineThiccWidth { get { return 10; } set { value = 10; } }
+    public int LineThinWidth { get { return 5; } }
+    public int LineThiccWidth { get { return 10; } }
 
 
     private void OnEnable()
     {
-        fieldGrid = fieldHolder.GetComponent<GridLayoutGroup>();
+        _fieldGrid = _fieldHolder.GetComponent<GridLayoutGroup>();
 
-        sizeX = 2;
-        sizeY = 2;
+        _dimensions = new Vector2(0, 0);
 
-        dimX = 0;
-        dimY = 0;
+        _info = FindObjectOfType<InfoManager>();
 
-        info = FindObjectOfType<InfoManager>();
-
-        uiHand = FindObjectOfType<UIHandler>();
-        uiHand.SetUpSlider(true, true, valueMin, valueMax, sizeX, sizeY);
+        _uiHand = FindObjectOfType<UIHandler>();
+        _uiHand.SetUpSlider(true, false, _valueMin, _valueMax, _sizeX, _sizeY);
 
         if (!IsBoardSet)
         {
@@ -71,82 +67,74 @@ public class SuguruBoard : MonoBehaviour, IBoard
         CompareValues();
     }
 
+    private void CheckEven()
+    {
+        if (_sizeX % 2 != 0) //Dimensions have to be %2
+        {
+            _sizeX++;
+        }
+    }
+
     public void CompareValues()
     {
         //Get slider value
-        sizeX = uiHand.GetXSliderValue();
-        sizeY = uiHand.GetYSliderValue();
+        _sizeX = _uiHand.GetXSliderValue();
+        _sizeY = _uiHand.GetYSliderValue();
 
-        Dimension = new Vector2(sizeX, sizeY);
+        CheckEven();
 
-        if (dimX != Dimension.x || dimY != Dimension.y) //Dimension changed
+        _sizeY = _sizeX;
+
+
+        if (_dimensions.x != Dimensions.x) //Dimension changed
         {
             DeleteBoard();
 
-            info.isValuesChanged = true;
+            _info.isValuesChanged = true;
 
-            if (Dimension.y > Dimension.x) //Change to fixed row
-            {
-                fieldGrid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-                fieldGrid.constraintCount = sizeY;
-            }
-            else
-            {
-                fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-                fieldGrid.constraintCount = sizeX;
-            }
+            _fieldGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            _fieldGrid.constraintCount = (int)Dimensions.x;
 
             CreateBoard();
-            dimX = sizeX;
-            dimY = sizeY;
+            _dimensions = Dimensions;
         }
     }
 
     public void CreateBoard()
     {
-        if (sizeX > sizeY)
-        {
-            spacing = totalWidth / sizeX;
-        }
-        else
-        {
-            spacing = totalWidth / sizeY;
-        }
-
-        fieldGrid.cellSize = new Vector2(spacing, spacing);
-
-        this.GetComponent<Image>().color = new Color(255, 255, 255, 255); //Switch to a white colour BG colour
+        _spacing = _totalWidth / Dimensions.x;
+        _fieldGrid.cellSize = new Vector2(_spacing, _spacing);
 
         SpawnInputFields();
         SpawnLines();
-        IsBoardSet = true;
+        _isBoardSet = true;
     }
 
     public void DeleteBoard()
     {
-        foreach (GameObject go in inputFields) //Remove all input fields
+        foreach (GameObject field in _inputFields) //Remove all input fields
         {
-            Destroy(go);
+            Destroy(field);
         }
 
-        foreach (GameObject go in lines) //Remove all lines
+        foreach (GameObject line in _lines) //Remove all lines
         {
-            Destroy(go);
+            Destroy(line);
         }
 
-        inputFields.Clear();
-        lines.Clear();
-        IsBoardSet = false;
+        _inputFields.Clear();
+        _lines.Clear();
+        _isBoardSet = false;
     }
 
     public void SpawnInputFields()
     {
-        for (int column = 0; column < sizeX; column++)
+        for (int row = 0; row < Dimensions.x; row++)
         {
-            for (int row = 0; row < sizeY; row++)
+            for (int column = 0; column < Dimensions.y; column++)
             {
-                var input = Instantiate(inputBox, fieldHolder.transform);
-                inputFields.Add(input);
+                var input = Instantiate(_inputBox, _fieldHolder.transform);
+                _inputFields.Add(input);
             }
         }
     }
@@ -154,19 +142,19 @@ public class SuguruBoard : MonoBehaviour, IBoard
     public void SpawnLines()
     {
         var outerLineAddition = 10; //The outer lines don't connect in the corners, with this they connect
-        
-        for (int indexX = 0; indexX <= Dimension.x; indexX++) //X
+
+        for (int indexX = 0; indexX <= Dimensions.x; indexX++) //X
         {
-            var verticalLine = Instantiate(linePixel, lineHolder.transform);
+            var verticalLine = Instantiate(_linePixel, _lineHolder.transform);
 
-            for (int indexY = 0; indexY <= Dimension.y; indexY++)
+            for (int indexY = 0; indexY <= Dimensions.y; indexY++)
             {
-                var horizontalLine = Instantiate(linePixel, lineHolder.transform);
+                var horizontalLine = Instantiate(_linePixel, _lineHolder.transform);
 
-                var totalWidth = spacing * sizeX;
-                var totalHeight = spacing * sizeY;
+                var totalWidth = _spacing * _sizeX;
+                var totalHeight = _spacing * _sizeY;
 
-                if (indexX == 0 || indexY == 0) //Outer edge left & bottom
+                if (indexX == 0 || indexY == 0) //Outer lines left & bottom
                 {
                     verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(-1 * (totalWidth / 2.0f), 0, 0);
@@ -175,7 +163,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
                     horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, -1 * (totalHeight / 2.0f), 0);
 
                 }
-                else if (indexX % (Dimension.x) == 1 || indexY % (Dimension.y) == 1)
+                else if (indexX % (Dimensions.x) == 1 || indexY % (Dimensions.y) == 1) //Outer lines right & top
                 {
                     verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3((totalWidth / 2.0f), 0, 0);
@@ -183,10 +171,10 @@ public class SuguruBoard : MonoBehaviour, IBoard
                     horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThiccWidth, 1);
                     horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (totalHeight / 2.0f), 0);
                 }
-                else
+                else //Inner lines
                 {
-                    var positionX = ((((Dimension.x / 2) - 1) + indexX) * spacing) - totalWidth;
-                    var positionY = ((((Dimension.y / 2) - 1) + indexY) * spacing) - totalHeight;
+                    var positionX = ((((Dimensions.x / 2) - 1) + indexX) * _spacing) - totalWidth;
+                    var positionY = ((((Dimensions.y / 2) - 1) + indexY) * _spacing) - totalHeight;
 
                     verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThinWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(positionX, 0, 0);
@@ -195,8 +183,8 @@ public class SuguruBoard : MonoBehaviour, IBoard
                     horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, positionY, 0);
                 }
 
-                lines.Add(verticalLine);
-                lines.Add(horizontalLine);
+                _lines.Add(verticalLine);
+                _lines.Add(horizontalLine);
             }
         }
     }

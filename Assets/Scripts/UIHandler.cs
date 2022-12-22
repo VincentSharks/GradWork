@@ -2,28 +2,26 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//
-//Takes care of representing the stats in the UI
+/// <summary>
+/// Takes care of representing the stats in the UI
+/// take info from infomanager
+/// get reference to UI
+/// </summary>
 
 public class UIHandler : MonoBehaviour
 {
-    //take info from infomanager
-    //get reference to UI
-    //
-
-    [SerializeField] private InfoManager info;
-
-    [SerializeField] private TMP_Text selectedPuzzle;
-    [SerializeField] private TMP_Text boardSize;
-
-    [SerializeField] private TMP_Text selectedAlgorithm;
-    [SerializeField] private TMP_Text randomSeed;
-
+    [SerializeField] private InfoManager _info;
 
     [Header("UI")]
-    [SerializeField] private GameObject xSlider;
-    [SerializeField] private GameObject ySlider;
-    [SerializeField] private GameObject runButton;
+    [SerializeField] private TMP_Text _selectedPuzzle;
+    [SerializeField] private TMP_Text _boardSize;
+
+    [SerializeField] private TMP_Text _selectedAlgorithm;
+    [SerializeField] private TMP_Text _randomSeed;
+           
+    [SerializeField] private GameObject _xSlider;
+    [SerializeField] private GameObject _ySlider;
+    [SerializeField] private GameObject _runButton;
 
     private void Awake()
     {
@@ -40,24 +38,24 @@ public class UIHandler : MonoBehaviour
 
     private void SetBoardInfoUI()
     {
-        selectedPuzzle.text = " " + info.puzzleName;
-        boardSize.text = " [X:" + info.boardSize.x + ", Y: " + info.boardSize.y + "]";
+        _selectedPuzzle.text = " " + _info.puzzleName;
+        _boardSize.text = " [X:" + _info.boardSize.x + ", Y: " + _info.boardSize.y + "]";
     }
 
     private void SetAlgorithmInfoUI()
     {
-        selectedAlgorithm.text = " " + info.algorithmName + " " + " v." + info.algorithmVersion;
+        _selectedAlgorithm.text = " " + _info.algorithmName + " " + " v." + _info.algorithmVersion;
     }
 
     private void SetOtherInfoUI()
     {
-        randomSeed.text = " " + info.RandomSeed;
+        _randomSeed.text = " " + _info.RandomSeed;
     }
 
     public void SetUpSlider(bool enable, bool enableY, int sliderMin, int sliderMax, int valueX, int valueY)
     {
-        xSlider.SetActive(enable);
-        ySlider.SetActive(enableY);
+        _xSlider.SetActive(enable);
+        _ySlider.SetActive(enableY);
         
         if (!enable) //sliders disabled
         {           
@@ -65,13 +63,13 @@ public class UIHandler : MonoBehaviour
         }
 
         //X Slider
-        var x = xSlider.GetComponent<Slider>();
+        var x = _xSlider.GetComponent<Slider>();
         x.minValue = sliderMin;
         x.maxValue = sliderMax;
         x.value = valueX;
         
         //Y Slider
-        var y = ySlider.GetComponent<Slider>();
+        var y = _ySlider.GetComponent<Slider>();
         y.minValue = sliderMin;
         y.maxValue = sliderMax;
         y.value = valueY;
@@ -79,22 +77,22 @@ public class UIHandler : MonoBehaviour
 
     public int GetXSliderValue()
     {
-        return (int)xSlider.GetComponent<Slider>().value;
+        return (int)_xSlider.GetComponent<Slider>().value;
     }
 
     public int GetYSliderValue()
     {
-        return (int)ySlider.GetComponent<Slider>().value;
+        return (int)_ySlider.GetComponent<Slider>().value;
     }
 
     private void SetUpRunButton()
     {
-        if(!info.isPuzzleSelected || !info.isAlgorithmSelected)
+        if(!_info.isPuzzleSelected || !_info.isAlgorithmSelected)
         {
-            runButton.SetActive(false);
+            _runButton.SetActive(false);
             return;
         }
 
-        runButton.SetActive(true);
+        _runButton.SetActive(true);
     }
 }
