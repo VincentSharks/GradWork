@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 /// <summary>
 /// Gather all the info from other scripts
@@ -10,11 +11,11 @@ using System;
 public class InfoManager : MonoBehaviour
 {
     [Header("Board")]
-    [SerializeField] private GameObject PuzzleDropDown;
+    [SerializeField] private GameObject _puzzleDropDown;
     public string puzzleName;
     
-    [SerializeField] private GameObject boardHolder;
-    private GameObject activeBoard;
+    [SerializeField] private GameObject _boardHolder;
+    private GameObject _activeBoard;
     public Vector2 boardSize;
 
     public List<GameObject> inputFields;
@@ -23,10 +24,10 @@ public class InfoManager : MonoBehaviour
     public List<int> possibleInputs;
 
     [Header("Algorithm")]
-    [SerializeField] private GameObject algorithDropDown;
+    [SerializeField] private GameObject _algorithDropDown;
     public string algorithmName;
 
-    [SerializeField] private GameObject algorithmHolder;
+    [SerializeField] private GameObject _algorithmHolder;
     public int algorithmVersion;
 
     public int RandomSeed { get; private set; }
@@ -42,12 +43,16 @@ public class InfoManager : MonoBehaviour
     public DateTime endAlgorithmTime;
     public TimeSpan elapsedTime;
 
+    public bool isExportData = false;
+
+    [SerializeField] private CSVManager _csv;
 
     private void Awake()
     {
         RandomSeed = DateTime.Now.Millisecond;
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
         algorithmVersion = 0;
+        _csv.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -65,20 +70,24 @@ public class InfoManager : MonoBehaviour
     {
         if(isValuesChanged)
         {
-
-
             //Check info
             GetBoardInfo();
             GetAlgorithmInfo();
 
             isValuesChanged = false;
         }
+
+        if(isExportData)
+        {
+            //ExportData();
+            _csv.gameObject.SetActive(true);
+        }
     }
 
     private void GetBoardInfo()
     {
         //Get board name
-        var dropdown = PuzzleDropDown.GetComponent<TMP_Dropdown>();
+        var dropdown = _puzzleDropDown.GetComponent<TMP_Dropdown>();
         var selectedID = dropdown.value;
         
         if (selectedID <= 0)
@@ -89,17 +98,26 @@ public class InfoManager : MonoBehaviour
 
         puzzleName = dropdown.options[selectedID].text;
 
+        //If board is changed
+        //Deselect algorithm
 
-
-
-
-
-
+        var board = _activeBoard;
+        
         //Get active board
-        activeBoard = boardHolder.transform.GetChild(selectedID - 1).gameObject;
-        boardSize = activeBoard.GetComponent<IBoard>().Dimensions;
+        _activeBoard = _boardHolder.transform.GetChild(selectedID - 1).gameObject;
 
-        inputFields = activeBoard.GetComponent<IBoard>().InputFields;
+        if (board != null)
+        {
+            if(board != _activeBoard) //See if board has changed
+            {
+                _algorithDropDown.GetComponent<TMP_Dropdown>().value = 0;
+                board = _activeBoard; //redundant?
+            }
+        }
+
+        boardSize = _activeBoard.GetComponent<IBoard>().Dimensions;
+
+        inputFields = _activeBoard.GetComponent<IBoard>().InputFields;
 
         isPuzzleSelected = true;
 
@@ -108,12 +126,12 @@ public class InfoManager : MonoBehaviour
 
     private void GetPuzzleLogicInfo()
     {     
-        possibleInputs = activeBoard.GetComponent<IPuzzleLogic>().PossibleInputs;
+        possibleInputs = _activeBoard.GetComponent<IPuzzleLogic>().PossibleInputs;
     }
 
     private void GetAlgorithmInfo()
     {        
-        var dropdown = algorithDropDown.GetComponent<TMP_Dropdown>();
+        var dropdown = _algorithDropDown.GetComponent<TMP_Dropdown>();
         var selectedID = dropdown.value;
         
         if(selectedID <= 0)
@@ -125,7 +143,7 @@ public class InfoManager : MonoBehaviour
 
         algorithmName = dropdown.options[selectedID].text;
 
-        var algorithmComponent = algorithmHolder.GetComponentInChildren<IAlgorithm>();
+        var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
 
         if (algorithmComponent != null)
         {
@@ -138,7 +156,7 @@ public class InfoManager : MonoBehaviour
 
     public void RunCombo() //Run button
     {
-        var algorithmComponent = algorithmHolder.GetComponentInChildren<IAlgorithm>();
+        var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
         algorithmComponent.Run();
         GetElapsedTime();
     }
@@ -146,14 +164,5 @@ public class InfoManager : MonoBehaviour
     private void GetElapsedTime()
     {
         elapsedTime = endAlgorithmTime - startAlgorithmTime;
-    }
-
-
-    private void ExportData()
-    {
-        //Get all the info and put it here
-        //set it all ready to be put into a CSV file
-
-
     }
 }

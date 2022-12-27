@@ -11,7 +11,9 @@ using System.Linq;
 public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
 {
     private InfoManager _info;
+    private AlgorithmHolder _algorithmHolder;
     private UnityEvent _algorithmEndEvent;
+    private bool _eventListenerSet = false;
 
     private List<GameObject> _inputFields = new List<GameObject>();
     
@@ -25,19 +27,30 @@ public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
     private void OnEnable()
     {
         _info = FindObjectOfType<InfoManager>();
+        _algorithmHolder = FindObjectOfType<AlgorithmHolder>();
 
-        //Algorithm End Event
-        var algorithmHolder = FindObjectOfType<AlgorithmHolder>();
-
-        //if algorithm is selected
-
-        _algorithmEndEvent = algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
-        _algorithmEndEvent.AddListener(() => ChangeToLetters(_inputFields));
+        AddListener();
     }
 
     private void Update()
     {
         _inputFields = _info.inputFields;
+
+        AddListener();
+    }
+
+    private void AddListener()
+    {
+        if(!_eventListenerSet)
+        {
+            //if algorithm is selected
+            if (_info.isAlgorithmSelected)
+            {
+                _algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
+                _algorithmEndEvent.AddListener(() => ChangeToLetters(_inputFields));
+                _eventListenerSet = true;
+            }
+        }
     }
 
     private void ChangeToLetters(List<GameObject> filledInFields)
@@ -54,12 +67,12 @@ public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
 
     private string OtherWay(int index)
     {
-        if(index > 26 || index < 0)
+        if(index > 26 || index <= 0)
         {
             return " ";
         }
 
         string alphabet = "abcdefghijklmnopqrstuvwxyz";
-        return alphabet.ElementAt(index-1).ToString().ToUpper();
+        return alphabet.ElementAt(index-1).ToString().ToUpper(); //out of range
     }
 }
