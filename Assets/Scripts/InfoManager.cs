@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using System;
-using System.IO;
+using UnityEngine.Events;
 
 /// <summary>
 /// Gather all the info from other scripts
@@ -12,13 +12,12 @@ public class InfoManager : MonoBehaviour
 {
     [Header("Board")]
     [SerializeField] private GameObject _puzzleDropDown;
-    public string puzzleName;
-    
+    public string puzzleName;    
     [SerializeField] private GameObject _boardHolder;
     private GameObject _activeBoard;
     public Vector2 boardSize;
-
     public List<GameObject> inputFields;
+    public bool isPuzzleSelected = false;
 
     [Header("PuzzleLogic")]
     public List<int> possibleInputs;
@@ -26,39 +25,42 @@ public class InfoManager : MonoBehaviour
     [Header("Algorithm")]
     [SerializeField] private GameObject _algorithDropDown;
     public string algorithmName;
-
     [SerializeField] private GameObject _algorithmHolder;
     public int algorithmVersion;
-
-    public int RandomSeed { get; private set; }
-    public bool isValuesChanged = false; //Bool to set to true in oter scripts when a parameter is changed
-
-    public bool isPuzzleSelected = false;
     public bool isAlgorithmSelected = false;
-
     public bool isAlgorithmSet = false;
 
-    //Timer
+    [Header("Iterations")]
+    [SerializeField] private GameObject _iterationsDropDown;
+    public int iterationsAmount = 1;
+
+    [Header("Timer")]
     public DateTime startAlgorithmTime;
     public DateTime endAlgorithmTime;
     public TimeSpan elapsedTime;
 
-    public bool isExportData = false;
-
+    [Header("Data")]
     [SerializeField] private CSVManager _csv;
+    public bool isExportData = false;
+    public bool isReadyForData = false;
+    public List<string> BoardData = new List<string>();
+
+    public int RandomSeed { get; set; }
+    public bool isValuesChanged = false; //Bool to set to true in oter scripts when a parameter is changed
 
     private void Awake()
     {
         RandomSeed = DateTime.Now.Millisecond;
-        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+        UnityEngine.Random.InitState(RandomSeed);
         algorithmVersion = 0;
-        _csv.gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
         inputFields = new List<GameObject>();
         possibleInputs = new List<int>();
+
+        //AddListener();
     }
 
     public void IsChanged()
@@ -73,14 +75,14 @@ public class InfoManager : MonoBehaviour
             //Check info
             GetBoardInfo();
             GetAlgorithmInfo();
+            GetIterationInfo();
 
             isValuesChanged = false;
         }
 
         if(isExportData)
         {
-            //ExportData();
-            _csv.gameObject.SetActive(true);
+            isExportData = false;
         }
     }
 
@@ -98,9 +100,6 @@ public class InfoManager : MonoBehaviour
 
         puzzleName = dropdown.options[selectedID].text;
 
-        //If board is changed
-        //Deselect algorithm
-
         var board = _activeBoard;
         
         //Get active board
@@ -111,12 +110,10 @@ public class InfoManager : MonoBehaviour
             if(board != _activeBoard) //See if board has changed
             {
                 _algorithDropDown.GetComponent<TMP_Dropdown>().value = 0;
-                board = _activeBoard; //redundant?
             }
         }
 
         boardSize = _activeBoard.GetComponent<IBoard>().Dimensions;
-
         inputFields = _activeBoard.GetComponent<IBoard>().InputFields;
 
         isPuzzleSelected = true;
@@ -152,17 +149,61 @@ public class InfoManager : MonoBehaviour
         
         isAlgorithmSelected = true;
         isAlgorithmSet = true;
+
+        AddListener();
+    }
+
+    private void GetIterationInfo()
+    {
+        var iterationsDropDown = _iterationsDropDown.GetComponent<TMP_Dropdown>();
+        var selectedID = iterationsDropDown.value;
+        var selectedString = iterationsDropDown.options[selectedID].text;
+        iterationsAmount = Convert.ToInt32(selectedString);
     }
 
     public void RunCombo() //Run button
     {
         var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
-        algorithmComponent.Run();
-        GetElapsedTime();
+
+        for (int i = 0; i < iterationsAmount; i++)
+        {
+            algorithmComponent.Run(); //Runs once?
+            GetElapsedTime();
+            isExportData = true;
+        }
+        //_csv.WriteDocuments();
     }
 
     private void GetElapsedTime()
     {
         elapsedTime = endAlgorithmTime - startAlgorithmTime;
+    }
+
+    //end algorithm event
+    //then put it in a file
+
+
+    private UnityEvent _algorithmEndEvent;
+    private bool _eventListenerSet = false;
+
+    private void AddListener()
+    {
+        if (!_eventListenerSet)
+        {
+            _algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
+            //_algorithmEndEvent.AddListener(() => _csv.WriteDocuments());
+
+            //_algorithmEndEvent.AddListener(() => _csv.WriteBoardData("Assets/CVSFiles/BoardFile.csv"));
+            //_algorithmEndEvent.AddListener(() => _csv.BoardData());
+            _algorithmEndEvent.AddListener(() => _csv.GetBoardData());
+            //Debug.Log("AddListener");
+
+
+            //if algorithm is selected
+            if (isAlgorithmSelected)
+            {
+                _eventListenerSet = true;
+            }
+        }
     }
 }

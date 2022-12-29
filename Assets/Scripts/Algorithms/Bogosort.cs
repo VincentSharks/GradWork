@@ -48,14 +48,25 @@ public class Bogosort : MonoBehaviour, IAlgorithm
         }
     }
 
+    private void EmptyField()
+    {
+        for (int i = 0; i < Fields.Count; i++) //Go over all fields
+        {
+            Fields[i].gameObject.GetComponent<TMP_InputField>().text = "X";
+        }
+    }
+
     public void Run()
     {
+        EmptyField();
+
         _algorithmStart.Invoke();
         Info.startAlgorithmTime = DateTime.Now;
         
         FillInField();
 
         Info.endAlgorithmTime = DateTime.Now;
-        _algorithmEnd.Invoke();
+        Info.isReadyForData = true;
+        _algorithmEnd.Invoke();       
     }
 }
