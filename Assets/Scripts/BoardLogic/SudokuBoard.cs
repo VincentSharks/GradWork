@@ -31,7 +31,6 @@ public class SudokuBoard : MonoBehaviour, IBoard
     [SerializeField] private GameObject _fieldHolder;
     private GridLayoutGroup _fieldGrid;
 
-
     [Header("Lines")]
     [SerializeField] private GameObject _linePixel;
     private List<GameObject> _lines = new List<GameObject>();
@@ -39,7 +38,6 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
     public int LineThinWidth { get { return 5; } }
     public int LineThiccWidth { get { return 10; } }
-
 
 
     private void OnEnable()
@@ -140,7 +138,6 @@ public class SudokuBoard : MonoBehaviour, IBoard
 
             if (index % 3 == 0)
             {
-
                 //Thicc
                 lineVertical.GetComponent<RectTransform>().localScale = new Vector3(LineThiccWidth, totalWidth + outerLineAddition, 1);
                 lineVertical.GetComponent<RectTransform>().localPosition = new Vector3(position, otherAxisPositionOffset, 0);

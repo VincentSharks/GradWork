@@ -545,7 +545,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1067372250}
         m_TargetAssemblyTypeName: CSVManager, Assembly-CSharp
-        m_MethodName: ExportBoard
+        m_MethodName: WriteDocuments
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

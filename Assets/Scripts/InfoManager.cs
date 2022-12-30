@@ -43,10 +43,18 @@ public class InfoManager : MonoBehaviour
     [SerializeField] private CSVManager _csv;
     public bool isExportData = false;
     public bool isReadyForData = false;
-    public List<string> BoardData = new List<string>();
+
+    public List<string> boardData = new List<string>();
+    public List<DateTime> startTimes = new List<DateTime>();
+    public List<DateTime> endTimes = new List<DateTime>();
+    public List<TimeSpan> elapsedTimes = new List<TimeSpan>();
+
 
     public int RandomSeed { get; set; }
     public bool isValuesChanged = false; //Bool to set to true in oter scripts when a parameter is changed
+
+    private UnityEvent _algorithmEndEvent;
+    private bool _eventListenerSet = false;
 
     private void Awake()
     {
@@ -59,8 +67,6 @@ public class InfoManager : MonoBehaviour
     {
         inputFields = new List<GameObject>();
         possibleInputs = new List<int>();
-
-        //AddListener();
     }
 
     public void IsChanged()
@@ -167,37 +173,25 @@ public class InfoManager : MonoBehaviour
 
         for (int i = 0; i < iterationsAmount; i++)
         {
-            algorithmComponent.Run(); //Runs once?
+            algorithmComponent.Run();
             GetElapsedTime();
             isExportData = true;
         }
-        //_csv.WriteDocuments();
     }
 
-    private void GetElapsedTime()
+    public void GetElapsedTime()
     {
         elapsedTime = endAlgorithmTime - startAlgorithmTime;
     }
-
-    //end algorithm event
-    //then put it in a file
-
-
-    private UnityEvent _algorithmEndEvent;
-    private bool _eventListenerSet = false;
 
     private void AddListener()
     {
         if (!_eventListenerSet)
         {
             _algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
-            //_algorithmEndEvent.AddListener(() => _csv.WriteDocuments());
-
-            //_algorithmEndEvent.AddListener(() => _csv.WriteBoardData("Assets/CVSFiles/BoardFile.csv"));
-            //_algorithmEndEvent.AddListener(() => _csv.BoardData());
+            
+            _algorithmEndEvent.AddListener(() => _csv.GetStatsData());
             _algorithmEndEvent.AddListener(() => _csv.GetBoardData());
-            //Debug.Log("AddListener");
-
 
             //if algorithm is selected
             if (isAlgorithmSelected)

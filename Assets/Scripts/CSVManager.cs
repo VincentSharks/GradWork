@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using TMPro;
-using UnityEditor.Sprites;
 using UnityEngine;
 
 /// <summary>
@@ -14,39 +11,24 @@ using UnityEngine;
 public class CSVManager : MonoBehaviour
 {
     private InfoManager _info;
-    private StreamWriter _boardWriter;
 
     private string _statsFilesName = "StatsFile.csv";
     private string _boardFileName = "BoardFile.csv";
 
-    private string _filePath = "Assets/CVSFiles/";
+    private string _filePath = "Assets/CSVFiles/";
 
     private string _fieldList;
+
 
     private void OnEnable()
     {
         _info = FindObjectOfType<InfoManager>();
-
-        CheckExistingFile(_boardFileName);
-        
     }
 
     public void WriteDocuments()
     {
         ExportData(false, _statsFilesName);
-        //ExportData(true, _boardFileName);
-    }
-
-    private void CheckExistingFile(string fileName)
-    {
-        var filePath = _filePath + fileName;
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath); //Delete existing file
-        }
-
-        //_boardWriter = new StreamWriter(filePath);
+        ExportData(true, _boardFileName);
     }
 
     //method for writing both files
@@ -57,61 +39,33 @@ public class CSVManager : MonoBehaviour
 
         if (isBoardFile)
         {
-            _fieldList = "";
             WriteBoardData(filePath);
-            //BoardData();
-            isBoardFile = false;
         }
         else
         {
             WriteStatsData(filePath);
         }
     }
-    private void WriteStatsData(string path)
+    
+
+    #region Board Data
+    private void WriteBoardData(string path)
     {
-        var spacer = ";";
-        using (StreamWriter file = new StreamWriter(path))
+        TextWriter tw = new StreamWriter(path, false);
+        tw.WriteLine("Number" + ";" + "Board List");
+        tw.Close();
+
+        //Open the file again and write in the data
+        tw = new StreamWriter(path, true);
+
+        foreach (string board in _info.boardData)
         {
-            //Iteration | Puzzle | Algorithm | Random Seed | Start Time | End Time | Elapsed Time | Hoeveel ticks? | Hoeveel garbage?
-            file.Write("Iteration" + spacer + "Puzzle" + spacer + "Algorithm" + spacer + "Random Seed" + spacer + "Start Time" + spacer + "End Time" + spacer + "Elapsed Time");
-            file.WriteLine(" "); //New Line
-
-            //foreach iteration
-            for (int i = 1; i <= _info.iterationsAmount; i++)
-            {
-                //1 | Sudoku | Dummy V1 | start time | end time | elapsed time
-                file.Write(i + spacer + _info.puzzleName + spacer + _info.algorithmName + " v." + _info.algorithmVersion + spacer + _info.RandomSeed + spacer + _info.startAlgorithmTime + spacer + _info.endAlgorithmTime + spacer + _info.elapsedTime);
-                file.WriteLine(" "); //New Line
-            }
+            tw.WriteLine((_info.boardData.IndexOf(board) + 1) + ";" + $"{board}");
         }
+
+        tw.Close();
     }
-    public void WriteBoardData(string path)
-    {
-        using (_boardWriter = new StreamWriter(path))
-        {
-            //Number | board list
-            _boardWriter.Write("Number" + ";" + "Board List");
-            _boardWriter.WriteLine(" "); //New Line
-
-
-
-            for (int i = 1; i <= _info.iterationsAmount; i++)
-            {
-                if (_info.isReadyForData)
-                {
-                    var fieldAsString = (BoardData());
-
-                    if (fieldAsString != "")
-                    {
-                        _boardWriter.WriteLine(i + ";" + fieldAsString);
-                        Debug.Log("ENTRY: " + fieldAsString);
-                    }
-                }  
-            }
-
-        }
-    }
-    private string BoardData()
+    private string BoardData() //Return the board list as a string
     {
         _fieldList = "";
 
@@ -127,58 +81,62 @@ public class CSVManager : MonoBehaviour
 
             return _fieldList;
         }
-        return "";        
+        return "";
     }
-    public void GetBoardData()
+    public void GetBoardData() //Put the board in 
     {
         if (_info.iterationsAmount > 0)
         {
-            //Create the file and put in the header
-            TextWriter tw = new StreamWriter("Assets/CVSFiles/BoardFile.csv", false);
-            tw.WriteLine("Number" + ";" + "Board List");
-            tw.Close();
-
-            //Open the file again and write in the data
-            tw = new StreamWriter("Assets/CVSFiles/BoardFile.csv", true);
-
             if (_info.isReadyForData)
             {
                 var fieldAsString = BoardData();
 
                 if (fieldAsString != "")
                 {
-                    //tw = new StreamWriter("Assets/CVSFiles/BoardFile" + i + ".csv" , false);
-
                     Debug.Log("Succes entry");
-                    Debug.Log("ENTRY: " + fieldAsString);
-
-                    _info.BoardData.Add(fieldAsString);
-
-                    //tw.WriteLine(fieldAsString);
-                    tw.WriteLine($"{fieldAsString}");
+                    _info.boardData.Add(fieldAsString);
                 }
             }
-
-            tw.Flush();
-            tw.Close();
         }
     }
-    public void ExportBoard()
+    #endregion
+
+    #region Stats Data
+    private void WriteStatsData(string path)
     {
-        TextWriter tw = new StreamWriter("Assets/CVSFiles/BoardFileTest.csv", false);
-        tw.WriteLine("Number" + ";" + "Board List");
+        var spacer = ";";
+        TextWriter tw = new StreamWriter(path, false);
+
+        //Iteration | Puzzle | Algorithm | Random Seed | Start Time | End Time | Elapsed Time | Hoeveel ticks? | Hoeveel garbage?
+        tw.WriteLine("Iteration" + spacer + "Puzzle" + spacer + "Algorithm" + spacer + "Random Seed" + spacer + "Start Time" + spacer + "End Time" + spacer + "Elapsed Time");
         tw.Close();
 
         //Open the file again and write in the data
-        tw = new StreamWriter("Assets/CVSFiles/BoardFileTest.csv", true);
+        tw = new StreamWriter(path, true);
 
-        foreach (string board in _info.BoardData)
+        for (int i = 1; i <= _info.iterationsAmount; i++)
         {
-            tw.WriteLine((_info.BoardData.IndexOf(board) + 1) + ";" + $"{board}");
+            //1 | Sudoku | Dummy V1 | start time | end time | elapsed time
+            tw.WriteLine(i + spacer + _info.puzzleName + spacer + _info.algorithmName + " v." + _info.algorithmVersion + spacer + _info.RandomSeed + spacer + 
+                _info.startTimes.ToArray().GetValue(i-1) + spacer + _info.endTimes.ToArray().GetValue(i-1) + spacer + _info.elapsedTimes.ToArray().GetValue(i - 1));
         }
 
         tw.Close();
     }
+    public void GetStatsData()
+    {
+        if (_info.iterationsAmount > 0)
+        {
+            if (_info.isReadyForData)
+            {
+                _info.startTimes.Add(_info.startAlgorithmTime);
+                _info.endTimes.Add(_info.endAlgorithmTime);
+
+                _info.elapsedTimes.Add(_info.elapsedTime);
+            }
+        }
+    }
+    #endregion
     #endregion
 
     #region Reading Data
