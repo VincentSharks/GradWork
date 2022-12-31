@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Events;
+using System.Linq;
 
 /// <summary>
 /// Gather all the info from other scripts
@@ -15,6 +16,9 @@ public class InfoManager : MonoBehaviour
     public string puzzleName;    
     [SerializeField] private GameObject _boardHolder;
     private GameObject _activeBoard;
+    private IBoard _activeBoardLogic;
+    private IPuzzleLogic _activePuzzleLogic;
+    
     public Vector2 boardSize;
     public List<GameObject> inputFields;
     public bool isPuzzleSelected = false;
@@ -45,6 +49,7 @@ public class InfoManager : MonoBehaviour
     public bool isReadyForData = false;
 
     public List<string> boardData = new List<string>();
+    public List<bool> boardIsValid = new List<bool>();
     public List<DateTime> startTimes = new List<DateTime>();
     public List<DateTime> endTimes = new List<DateTime>();
     public List<TimeSpan> elapsedTimes = new List<TimeSpan>();
@@ -119,8 +124,9 @@ public class InfoManager : MonoBehaviour
             }
         }
 
-        boardSize = _activeBoard.GetComponent<IBoard>().Dimensions;
-        inputFields = _activeBoard.GetComponent<IBoard>().InputFields;
+        _activeBoardLogic = _activeBoard.GetComponent<IBoard>();
+        boardSize = _activeBoardLogic.Dimensions;
+        inputFields = _activeBoardLogic.InputFields;
 
         isPuzzleSelected = true;
 
@@ -128,8 +134,9 @@ public class InfoManager : MonoBehaviour
     }
 
     private void GetPuzzleLogicInfo()
-    {     
-        possibleInputs = _activeBoard.GetComponent<IPuzzleLogic>().PossibleInputs;
+    {
+        _activePuzzleLogic = _activeBoard.GetComponent<IPuzzleLogic>();
+        possibleInputs = _activePuzzleLogic.PossibleInputs;
     }
 
     private void GetAlgorithmInfo()
@@ -198,6 +205,19 @@ public class InfoManager : MonoBehaviour
             {
                 _eventListenerSet = true;
             }
+        }
+    }
+
+    public void CheckBoard()
+    {
+        var puzzle = FindObjectOfType<SudokuLogic>();
+
+        foreach (string board in boardData)
+        {
+            string value = board.Replace(" ", "");
+            var intList = value.Select(digit => int.Parse(digit.ToString()));
+
+            boardIsValid.Add(puzzle.CheckBoard(intList.ToList()));
         }
     }
 }
