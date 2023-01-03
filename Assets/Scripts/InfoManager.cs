@@ -125,8 +125,8 @@ public class InfoManager : MonoBehaviour
         }
 
         _activeBoardLogic = _activeBoard.GetComponent<IBoard>();
-        boardSize = _activeBoardLogic.Dimensions;
-        inputFields = _activeBoardLogic.InputFields;
+        boardSize = _activeBoardLogic.dimensions;
+        inputFields = _activeBoardLogic.inputFields;
 
         isPuzzleSelected = true;
 
