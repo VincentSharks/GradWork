@@ -52,7 +52,7 @@ public class CSVManager : MonoBehaviour
     private void WriteBoardData(string path)
     {
         TextWriter tw = new StreamWriter(path, false);
-        tw.WriteLine("Number" + ";" + "Board List");
+        tw.WriteLine("Number" + "," + "Board List");
         tw.Close();
 
         //Open the file again and write in the data
@@ -60,7 +60,7 @@ public class CSVManager : MonoBehaviour
 
         foreach (string board in _info.boardData)
         {
-            tw.WriteLine((_info.boardData.IndexOf(board) + 1) + ";" + $"{board}");
+            tw.WriteLine((_info.boardData.IndexOf(board) + 1) + "," + $"{board}");
         }
 
         tw.Close();
@@ -104,7 +104,7 @@ public class CSVManager : MonoBehaviour
     #region Stats Data
     private void WriteStatsData(string path)
     {
-        var spacer = ";";
+        var spacer = ",";
         TextWriter tw = new StreamWriter(path, false);
 
         //Iteration | Puzzle | Algorithm | Random Seed | Start Time | End Time | Elapsed Time | Hoeveel ticks? | Hoeveel garbage?
