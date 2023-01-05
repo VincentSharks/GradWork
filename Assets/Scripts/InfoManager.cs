@@ -128,6 +128,7 @@ public class InfoManager : MonoBehaviour
         boardSize = _activeBoardLogic.dimensions;
         inputFields = _activeBoardLogic.inputFields;
 
+
         isPuzzleSelected = true;
 
         GetPuzzleLogicInfo();

@@ -256,6 +256,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
             CheckFieldAvailability(_neighbourField, _localFieldList);
             _neighbourField.GetComponent<Image>().color = new Color(1f, .2f, .2f);
             _currentField = _neighbourField;
+
             //Check field in direction
             //Grow in that direction
             //if can't grow anymore (all directions blocked or list count >= 5)
