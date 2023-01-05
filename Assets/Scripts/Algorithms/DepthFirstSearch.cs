@@ -17,11 +17,6 @@ using TMPro;
 
 public class DepthFirstSearch : MonoBehaviour
 {
-    //2Dmlist of integers? representing sudoku board
-    //return solved board
-    //DFS algorithm
-    //
-
     public void CallSolver()
     {
         var info = FindObjectOfType<InfoManager>();
@@ -39,7 +34,6 @@ public class DepthFirstSearch : MonoBehaviour
             info.inputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
         }
     }
-
 
     // This function takes a 1D list of integers representing a Sudoku board and returns a solved version of the board using a DFS algorithm.
     public List<int> SolveSudoku(List<int> board)
@@ -76,15 +70,19 @@ public class DepthFirstSearch : MonoBehaviour
             return DfsNextCell(board, row, col);
         }
 
+        // Create a list of possible numbers and shuffle it.
+        List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        Shuffle(numbers);
+
         // Try all possible numbers for the current cell.
-        for (int i = 1; i <= 9; i++)
+        foreach (int num in numbers)
         {
             // If the number is valid for the current cell, set the cell to that number and continue the search.
-            if (IsValidNumber(board, row, col, i))
+            if (IsValidNumber(board, row, col, num))
             {
                 //Debug.Log("Number: " + i);
 
-                board[row][col] = i;
+                board[row][col] = num;
                 if (DfsNextCell(board, row, col))
                 {
                     return true;
@@ -176,5 +174,17 @@ public class DepthFirstSearch : MonoBehaviour
             }
         }
         return board1D;
+    }
+
+    // This function shuffles a list in place.
+    private void Shuffle(List<int> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int temp = list[i];
+            int randomIndex = UnityEngine.Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 }
