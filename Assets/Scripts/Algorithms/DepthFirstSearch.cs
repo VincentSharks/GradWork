@@ -1,23 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 //ChatGPT
 
-/// <summary>
-/// The SolveSudoku function then calls the Dfs function, which is a recursive function that tries 
-/// all possible numbers for a given cell and continues the search until a solution is found or all 
-/// possibilities have been exhausted. 
-/// If a solution is found, the function returns true; 
-/// otherwise, it returns false. The Dfs function also uses the DfsNextCell function to 
-/// move to the next cell in the board, and the IsValidNumber function to check if a given 
-/// number is valid for a given cell in the Sudoku board.
-/// </summary>
-
-public class DepthFirstSearch : MonoBehaviour
+public class DepthFirstSearch : MonoBehaviour, IAlgorithm
 {
-    public void CallSolver()
+    public List<int> Inputs => throw new System.NotImplementedException();
+
+    public List<GameObject> Fields => throw new System.NotImplementedException();
+
+    public InfoManager Info => throw new System.NotImplementedException();
+
+    public int AlgorithmVersion => throw new System.NotImplementedException();
+
+    public UnityEvent AlgorithmStart => throw new System.NotImplementedException();
+
+    public UnityEvent AlgorithmEnd => throw new System.NotImplementedException();
+
+
+    public void Run()
+    {
+        CallSolver();
+    }
+
+    private void CallSolver()
     {
         var info = FindObjectOfType<InfoManager>();
         var board = new List<int>();
@@ -27,25 +35,20 @@ public class DepthFirstSearch : MonoBehaviour
             board.Add(0);
         }
 
-        var output = SolveSudoku(board);
+        var output = Solver(board);
 
         for (int j = 0; j < info.inputFields.Count; j++)
         {
             info.inputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
         }
     }
-
-    // This function takes a 1D list of integers representing a Sudoku board and returns a solved version of the board using a DFS algorithm.
-    public List<int> SolveSudoku(List<int> board)
-    {
-        // Convert the 1D list to a 2D list.
-        List<List<int>> board2D = ConvertTo2D(board); 
-
-        // Start the DFS at the first cell.
-        bool solved = Dfs(board2D, 0, 0);
-
-        // If the board was solved, convert it back to a 1D list and return it. Otherwise, return an empty list.
-        if (solved)
+    
+    private List<int> Solver(List<int> board) // This function takes a 1D list of integers representing a Sudoku board and returns a solved version of the board using a DFS algorithm.
+    {        
+        List<List<int>> board2D = ConvertTo2D(board); // Convert the 1D list to a 2D list.        
+        bool solved = DFS(board2D, 0, 0); // Start the DFS at the first cell.
+        
+        if (solved) // If the board was solved, convert it back to a 1D list and return it. Otherwise, return an empty list.
         {
             return ConvertTo1D(board2D);
         }
@@ -56,7 +59,7 @@ public class DepthFirstSearch : MonoBehaviour
     }
 
     // This function uses DFS to try all possible numbers for a given cell and continues the search until a solution is found or all possibilities have been exhausted.
-    private bool Dfs(List<List<int>> board, int row, int col)
+    private bool DFS(List<List<int>> board, int row, int col)
     {
         // If the end of the board has been reached, a solution has been found.
         if (row == 9)
@@ -67,7 +70,7 @@ public class DepthFirstSearch : MonoBehaviour
         // If the current cell is not empty, move on to the next cell.
         if (board[row][col] != 0)
         {
-            return DfsNextCell(board, row, col);
+            return DFSNextCell(board, row, col);
         }
 
         // Create a list of possible numbers and shuffle it.
@@ -83,7 +86,7 @@ public class DepthFirstSearch : MonoBehaviour
                 //Debug.Log("Number: " + i);
 
                 board[row][col] = num;
-                if (DfsNextCell(board, row, col))
+                if (DFSNextCell(board, row, col))
                 {
                     return true;
                 }
@@ -96,15 +99,15 @@ public class DepthFirstSearch : MonoBehaviour
     }
 
     // This function moves to the next cell in the board. If the end of the row has been reached, it moves to the first cell of the next row.
-    private bool DfsNextCell(List<List<int>> board, int row, int col)
+    private bool DFSNextCell(List<List<int>> board, int row, int col)
     {
         if (col == 8)
         {
-            return Dfs(board, row + 1, 0);
+            return DFS(board, row + 1, 0);
         }
         else
         {
-            return Dfs(board, row, col + 1);
+            return DFS(board, row, col + 1);
         }
     }
 
@@ -186,5 +189,5 @@ public class DepthFirstSearch : MonoBehaviour
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
-    }
+    }    
 }
