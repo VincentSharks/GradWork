@@ -33,6 +33,20 @@ public class Bogosort : MonoBehaviour, IAlgorithm
         _fields = Info.inputFields;
     }
 
+    public void Run()
+    {
+        EmptyField();
+
+        _algorithmStart.Invoke();
+        Info.startAlgorithmTime = DateTime.Now;
+
+        FillInField();
+
+        Info.endAlgorithmTime = DateTime.Now;
+        Info.isReadyForData = true;
+        _algorithmEnd.Invoke();
+    }
+
     private int GetRandom()
     {
         var random = UnityEngine.Random.Range(0, Count);
@@ -54,19 +68,5 @@ public class Bogosort : MonoBehaviour, IAlgorithm
         {
             Fields[i].gameObject.GetComponent<TMP_InputField>().text = "X";
         }
-    }
-
-    public void Run()
-    {
-        EmptyField();
-
-        _algorithmStart.Invoke();
-        Info.startAlgorithmTime = DateTime.Now;
-        
-        FillInField();
-
-        Info.endAlgorithmTime = DateTime.Now;
-        Info.isReadyForData = true;
-        _algorithmEnd.Invoke();       
     }
 }

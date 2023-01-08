@@ -3,23 +3,35 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
 
-//ChatGPT
+/// <summary>
+/// Logic for the Depth-Frist Search algorithm (Version 1) (Made with ChatGPT)
+/// </summary>
 
 public class DepthFirstSearch : MonoBehaviour, IAlgorithm
 {
-    public List<int> Inputs => throw new System.NotImplementedException();
-
-    public List<GameObject> Fields => throw new System.NotImplementedException();
-
-    public InfoManager Info => throw new System.NotImplementedException();
-
-    public int AlgorithmVersion => throw new System.NotImplementedException();
-
-    public UnityEvent AlgorithmStart => throw new System.NotImplementedException();
-
-    public UnityEvent AlgorithmEnd => throw new System.NotImplementedException();
+    public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } }
+    private List<int> _inputs = new List<int>();
+    public List<int> Inputs { get { return _inputs; } }
+    public int Count { get { return Inputs.Count; } }
+    private List<GameObject> _fields = new List<GameObject>();
+    public List<GameObject> Fields { get { return _fields; } }
+    private int _algorithmVersion = 1;
+    public int AlgorithmVersion { get { return _algorithmVersion; } }
 
 
+    private UnityEvent _algorithmEnd = new UnityEvent();
+    public UnityEvent AlgorithmEnd { get { return _algorithmEnd; } }
+
+    private UnityEvent _algorithmStart = new UnityEvent();
+    public UnityEvent AlgorithmStart { get { return _algorithmStart; } }
+
+
+    private void OnEnable()
+    {
+        _inputs = Info.possibleInputs;
+        _fields = Info.inputFields;
+    }
+    
     public void Run()
     {
         CallSolver();
@@ -74,17 +86,14 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
         }
 
         // Create a list of possible numbers and shuffle it.
-        List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        Shuffle(numbers);
+        Shuffle(_inputs);
 
         // Try all possible numbers for the current cell.
-        foreach (int num in numbers)
+        foreach (int num in _inputs)
         {
             // If the number is valid for the current cell, set the cell to that number and continue the search.
             if (IsValidNumber(board, row, col, num))
             {
-                //Debug.Log("Number: " + i);
-
                 board[row][col] = num;
                 if (DFSNextCell(board, row, col))
                 {

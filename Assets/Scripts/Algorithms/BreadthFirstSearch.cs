@@ -1,16 +1,43 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
-//CHATGPT
-public class BreadthFirstSearch : MonoBehaviour
+/// <summary>
+/// Logic for the Depth Frist Search algorithm (Version 1) (Made with ChatGPT)
+/// </summary>
+
+public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
 {
-    public void Run()
+    public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } }
+    private List<int> _inputs = new List<int>();
+    public List<int> Inputs { get { return _inputs; } }
+    public int Count { get { return Inputs.Count; } }
+    private List<GameObject> _fields = new List<GameObject>();
+    public List<GameObject> Fields { get { return _fields; } }
+    private int _algorithmVersion = 1;
+    public int AlgorithmVersion { get { return _algorithmVersion; } }
+
+
+    private UnityEvent _algorithmEnd = new UnityEvent();
+    public UnityEvent AlgorithmEnd { get { return _algorithmEnd; } }
+
+    private UnityEvent _algorithmStart = new UnityEvent();
+    public UnityEvent AlgorithmStart { get { return _algorithmStart; } }
+
+
+    private void OnEnable()
     {
-        CallSolver();
+        _inputs = Info.possibleInputs;
+        _fields = Info.inputFields;
     }
 
-    private void CallSolver()
+    public void Run()
+    {
+        CallGenerator();
+    }
+
+    private void CallGenerator()
     {
         var info = FindObjectOfType<InfoManager>();
         var board = new List<int>();
@@ -53,10 +80,9 @@ public class BreadthFirstSearch : MonoBehaviour
         }
 
         // Create a list of possible numbers and shuffle it.
-        List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        Shuffle(numbers);
+        Shuffle(_inputs);
 
-        foreach (int num in numbers)
+        foreach (int num in _inputs)
         {
             if (IsValid(board, cell.Item1, cell.Item2, num)) // If the number is valid for the cell, fill the cell with the number
             {
@@ -70,21 +96,6 @@ public class BreadthFirstSearch : MonoBehaviour
                 board[cell.Item1][cell.Item2] = 0; // Otherwise, reset the cell to empty and try the next number
             }
         }
-
-        //for (int num = 1; num <= board.Count; num++) // Try filling the cell with every possible number
-        //{
-        //    if (IsValid(board, cell.Item1, cell.Item2, num)) // If the number is valid for the cell, fill the cell with the number
-        //    {
-        //        board[cell.Item1][cell.Item2] = num;
-
-        //        if (BFS(board)) // If the board can be solved with this change, return true
-        //        {
-        //            return true;
-        //        }
-
-        //        board[cell.Item1][cell.Item2] = 0; // Otherwise, reset the cell to empty and try the next number
-        //    }
-        //}
 
         return false; // If no solution was found, return false
     }
