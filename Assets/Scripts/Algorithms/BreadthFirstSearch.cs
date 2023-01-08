@@ -79,7 +79,6 @@ public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
             return true;
         }
 
-        // Create a list of possible numbers and shuffle it.
         Shuffle(_inputs);
 
         foreach (int num in _inputs)

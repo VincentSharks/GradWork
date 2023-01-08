@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
+using System;
 
 /// <summary>
 /// Logic for the Depth-Frist Search algorithm (Version 1) (Made with ChatGPT)
@@ -34,7 +35,18 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
     
     public void Run()
     {
+        _inputs = Info.possibleInputs;
+        _fields = Info.inputFields;
+
+
+        _algorithmStart.Invoke();
+        Info.startAlgorithmTime = DateTime.Now;
+
         CallSolver();
+
+        Info.endAlgorithmTime = DateTime.Now;
+        Info.isReadyForData = true;
+        _algorithmEnd.Invoke();
     }
 
     private void CallSolver()
@@ -42,16 +54,16 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
         var info = FindObjectOfType<InfoManager>();
         var board = new List<int>();
 
-        for (int i = 0; i < info.inputFields.Count; i++)
+        for (int i = 0; i < Info.inputFields.Count; i++)
         {
             board.Add(0);
         }
 
         var output = Solver(board);
 
-        for (int j = 0; j < info.inputFields.Count; j++)
+        for (int j = 0; j < Info.inputFields.Count; j++)
         {
-            info.inputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
+            Info.inputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
         }
     }
     
@@ -66,7 +78,8 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
         }
         else
         {
-            return new List<int>();
+            //return new List<int>();
+            return ConvertTo1D(board2D);
         }
     }
 
@@ -89,12 +102,15 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
         Shuffle(_inputs);
 
         // Try all possible numbers for the current cell.
-        foreach (int num in _inputs)
+        for (int i = 1; i <= 9; i++)
         {
             // If the number is valid for the current cell, set the cell to that number and continue the search.
-            if (IsValidNumber(board, row, col, num))
+
+            var index = _inputs[i - 1];
+
+            if (IsValidNumber(board, row, col, index))
             {
-                board[row][col] = num;
+                board[row][col] = index;
                 if (DFSNextCell(board, row, col))
                 {
                     return true;

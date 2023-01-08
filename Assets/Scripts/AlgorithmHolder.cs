@@ -59,6 +59,14 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
                 this.transform.GetChild(index - 1).gameObject.SetActive(true); //Bogosort
                 _info.isAlgorithmSet = true;
                 break;
+            case 2:
+                this.transform.GetChild(index - 1).gameObject.SetActive(true); //DFS
+                _info.isAlgorithmSet = true;
+                break;
+            case 3:
+                this.transform.GetChild(index - 1).gameObject.SetActive(true); //BFS
+                _info.isAlgorithmSet = true;
+                break;
         }
     }
 }
