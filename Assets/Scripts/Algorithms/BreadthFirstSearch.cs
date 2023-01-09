@@ -81,11 +81,13 @@ public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
 
         Shuffle(_inputs);
 
-        foreach (int num in _inputs)
+        for (int i = 1; i <= 9; i++)
         {
-            if (IsValid(board, cell.Item1, cell.Item2, num)) // If the number is valid for the cell, fill the cell with the number
+            var index = _inputs[i - 1];
+
+            if (IsValid(board, cell.Item1, cell.Item2, index)) // If the number is valid for the cell, fill the cell with the number
             {
-                board[cell.Item1][cell.Item2] = num;
+                board[cell.Item1][cell.Item2] = index;
 
                 if (BFS(board)) // If the board can be solved with this change, return true
                 {
