@@ -75,4 +75,9 @@ public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
         string alphabet = "abcdefghijklmnopqrstuvwxyz";
         return alphabet.ElementAt(index-1).ToString().ToUpper(); //out of range
     }
+
+    public bool IsValidNumber(List<List<int>> board, int row, int col, int num, InfoManager info)
+    {
+        throw new System.NotImplementedException();
+    }
 }

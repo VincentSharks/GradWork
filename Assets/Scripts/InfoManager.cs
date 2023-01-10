@@ -17,7 +17,7 @@ public class InfoManager : MonoBehaviour
     [SerializeField] private GameObject _boardHolder;
     private GameObject _activeBoard;
     private IBoard _activeBoardLogic;
-    private IPuzzleLogic _activePuzzleLogic;
+    public IPuzzleLogic activePuzzleLogic;
     
     public Vector2 boardSize;
     public List<GameObject> inputFields;
@@ -136,8 +136,8 @@ public class InfoManager : MonoBehaviour
 
     private void GetPuzzleLogicInfo()
     {
-        _activePuzzleLogic = _activeBoard.GetComponent<IPuzzleLogic>();
-        possibleInputs = _activePuzzleLogic.PossibleInputs;
+        activePuzzleLogic = _activeBoard.GetComponent<IPuzzleLogic>();
+        possibleInputs = activePuzzleLogic.PossibleInputs;
     }
 
     private void GetAlgorithmInfo()

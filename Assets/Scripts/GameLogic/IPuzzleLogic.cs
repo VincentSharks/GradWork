@@ -6,4 +6,6 @@ public interface IPuzzleLogic
     public List<int> PossibleInputs { get; }
 
     //Correctness check
+
+    public bool IsValidNumber(List<List<int>> board, int row, int col, int num, InfoManager info);
 }

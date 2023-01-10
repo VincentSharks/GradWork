@@ -5,10 +5,10 @@ using UnityEngine.Events;
 using System;
 
 /// <summary>
-/// Logic for the Depth-Frist Search algorithm (Version 1) (Made with ChatGPT)
+/// Logic for the Depth-Frist Search algorithm (Version 2) (Made with ChatGPT)
 /// </summary>
 
-public class DepthFirstSearch : MonoBehaviour, IAlgorithm
+public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
 {
     public InfoManager Info { get { return FindObjectOfType<InfoManager>(); } }
     private List<int> _inputs = new List<int>();
@@ -16,7 +16,7 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
     public int Count { get { return Inputs.Count; } }
     private List<GameObject> _fields = new List<GameObject>();
     public List<GameObject> Fields { get { return _fields; } }
-    private int _algorithmVersion = 1;
+    private int _algorithmVersion = 2;
     public int AlgorithmVersion { get { return _algorithmVersion; } }
 
 
@@ -133,40 +133,8 @@ public class DepthFirstSearch : MonoBehaviour, IAlgorithm
     // This function checks if a given number is valid for a given cell in the Sudoku board.
     private bool IsValidNumber(List<List<int>> board, int row, int col, int num)
     {
-        for (int i = 0; i < Info.boardSize.x; i++) // Check the row.
-        {
-            if (board[row][i] == num)
-            {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < Info.boardSize.y; i++) // Check the column.
-        {
-            if (board[i][col] == num)
-            {
-                return false;
-            }
-        }
-
-        if (Info.puzzleName == "Sudoku") //Box check for sudoku
-        {
-            // Check the 3x3 grid.
-            int gridRow = row - row % 3;
-            int gridCol = col - col % 3;
-            for (int i = gridRow; i < gridRow + 3; i++)
-            {
-                for (int j = gridCol; j < gridCol + 3; j++)
-                {
-                    if (board[i][j] == num)
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        //Call the checker of the puzzle logic script
+        return Info.activePuzzleLogic.IsValidNumber(board, row, col, num, Info);
     }
 
     // This function converts a 1D list to a 2D list.

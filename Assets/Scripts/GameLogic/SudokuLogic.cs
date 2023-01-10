@@ -104,7 +104,6 @@ public class SudokuLogic : MonoBehaviour, IPuzzleLogic
         }
         #endregion
 
-        //Box
         #region Box
         while (horizontalCorrect && verticalCorrect && !boxCorrect)
         {
@@ -171,5 +170,49 @@ public class SudokuLogic : MonoBehaviour, IPuzzleLogic
         }
 
         return totalSum;
+    }
+
+
+
+
+
+    //Check final board
+
+
+
+    /// <summary> check if next input is valid </summary>    
+    public bool IsValidNumber(List<List<int>> board, int row, int col, int num, InfoManager info) // This function checks if a given number is valid for a given cell in the Sudoku board.
+    {
+        for (int i = 0; i < info.boardSize.x; i++) // Check the row.
+        {
+            if (board[row][i] == num)
+            {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < info.boardSize.y; i++) // Check the column.
+        {
+            if (board[i][col] == num)
+            {
+                return false;
+            }
+        }
+
+        // Check the 3x3 grid.
+        int gridRow = row - row % 3;
+        int gridCol = col - col % 3;
+        for (int i = gridRow; i < gridRow + 3; i++)
+        {
+            for (int j = gridCol; j < gridCol + 3; j++)
+            {
+                if (board[i][j] == num)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
