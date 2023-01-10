@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -34,7 +35,14 @@ public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
 
     public void Run()
     {
+        _algorithmStart.Invoke();
+        Info.startAlgorithmTime = DateTime.Now;
+
         CallGenerator();
+
+        Info.endAlgorithmTime = DateTime.Now;
+        Info.isReadyForData = true;
+        _algorithmEnd.Invoke();
     }
 
     private void CallGenerator()
