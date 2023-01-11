@@ -53,8 +53,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
     private GameObject _currentField;
     private GameObject _neighbourField;
     private bool _isStartFieldSet = false;
-    private bool _isNeighbourSet = false;
-    private bool _isGrow = false;
     private List<GameObject> _localFieldList = new List<GameObject>();
     private List<int> _directionList = new List<int>();
 
@@ -130,8 +128,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
         _fieldGrid.cellSize = new Vector2(_spacing, _spacing);
 
-        //this.GetComponent<Image>().color = new Color(255, 255, 255, 255); //Switch to a white colour BG colour
-
         SpawnInputFields();
         SpawnLines();
         isBoardSet = true;
@@ -163,7 +159,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
                 var input = Instantiate(_inputBox, _fieldHolder.transform);
                 _inputFields.Add(input);
                 _fieldsForIDs.Add(input);
-                //_fieldsForIDs.Add(input);
             }
         }
     }
@@ -202,7 +197,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
                 }
                 else
                 {
-                    
+                    //Inner lines
                 }
 
                 _lines.Add(verticalLine);
@@ -223,8 +218,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
             //Check Board Done
             if (_fieldsForIDs.Count <= 0) //No more available tiles
             {
-                Debug.Log("Board should be completely done");
-
                 foreach (GameObject field in _inputFields) //Give each their group ID
                 {
                     field.GetComponent<TMP_InputField>().text = field.GetComponent<Field>().fieldID.ToString();
@@ -246,8 +239,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
                 while (_directionList.Count > 0)
                 {
-                    //Debug.Log("While loop");
-
                     var direction = GetDirection();
                     bool isDirectionValid = CheckDirection(direction);
 
@@ -261,7 +252,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
             }
 
             _fieldID++;
-        } 
+        }
     }
 
     private void GetStartField() //pick a random field (that doesn't have an ID yet)
@@ -289,8 +280,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private int GetDirection() //generate a random number (1-4)
     {
-        //remove when failed
-
         Shuffle(_directionList);
         var index = _directionList[0];
         var currentID = inputFields.IndexOf(_currentField);
@@ -315,50 +304,45 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
         if (direction < 0 || direction >= _inputFields.Count) //Check if direction is within board
         {
-            //Debug.Log("direction is out of board, recalculate");
             _directionList.Remove(_directionList[0]);
             return false;
         }
 
-        if (direction / _sizeX == 1 && currentID < direction) //If there is no rest, it is the left most column
+        //going right
+        if (currentID + 1 == direction)
         {
-            if (currentID + 1 == direction)
+            if ((currentID + 1) % _sizeX == 0) //If there is no rest, it is the left most column
             {
-                Debug.Log($"{direction} is on the left most column but is wrapping around from {currentID}, recalculate");
                 _directionList.Remove(_directionList[0]);
                 return false;
             }
         }
 
-        if (direction / (_sizeX - 1) == 1 && currentID > direction) //If there is no rest, it is on the right most column
+        //going left
+        if (currentID - 1 == direction)
         {
-            if (currentID - 1 == direction)
+            if (currentID % _sizeX == 0) //If there is no rest, it is the left most column
             {
-                Debug.Log($"{direction} is on the right most column but is wrapping around from {currentID}, recalculate");
                 _directionList.Remove(_directionList[0]);
                 return false;
             }
         }
-
-        //Debug.Log("Valid direction");
         return true;
     }
 
     private void GetNeightbourField(int direction)
     {
-        _neighbourField = _inputFields[direction]; //ERROR: negative number?
+        _neighbourField = _inputFields[direction];
     }
 
     private void CheckNeighbourField()
-    {        
+    {
         if (_neighbourField.GetComponent<Field>().fieldID != 0 || _localFieldList.Contains(_neighbourField))
         {
-            //Debug.Log("Neighbour not available");
             _directionList.Remove(_directionList[0]);
             return;
         }
 
-        _isNeighbourSet = true;
         _neighbourField.GetComponent<Field>().fieldID = _fieldID;
         _fieldsForIDs.Remove(_neighbourField);
         _currentField = _neighbourField;
@@ -386,8 +370,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
         _currentField = null;
         _neighbourField = null;
         _isStartFieldSet = false;
-        _isNeighbourSet = false;
-        _isGrow = false;
         _localFieldList = new List<GameObject>();
         _directionList = new List<int>();
     }
