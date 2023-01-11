@@ -221,11 +221,14 @@ public class SuguruBoard : MonoBehaviour, IBoard
         var direction = GetDirection();
         bool isDirectionValid = CheckDirection(direction);
 
-        if(isDirectionValid)
+
+        if (isDirectionValid)
         {
             GetNeightbourField(direction);
 
             _neighbourField.GetComponent<Image>().color = new Color(0.4f, 0.4f, .8f);
+
+            CheckNeighbourField();
         }
 
 
@@ -233,67 +236,6 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
 
 
-
-        //try to grow in that direction
-        //else regenerate a number
-
-        //grow in that direction
-        //add the ID to this field, 
-
-        //max go to 5 fields with a single ID
-
-        //repeat until the field is filled
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //_currentField.GetComponent<Image>().color = new Color(0.2f, 0.2f, .8f);
-
-        ////Neightbour
-        //_isGrow = true;
-
-        //while (_isGrow)
-        //{
-        //    Debug.Log("RUN");
-
-        //    //Get direction from current field
-        //    //Check direction
-        //    GetNeighbour();
-        //    CheckFieldAvailability(_neighbourField);
-        //    _neighbourField.GetComponent<Image>().color = new Color(1f, .2f, .2f);
-        //    _currentField = _neighbourField;
-
-        //    //Check field in direction
-        //    //Grow in that direction
-        //    //if can't grow anymore (all directions blocked or list count >= 5)
-
-
-
-
-
-
-        //    //TryGrowNeighbour(_localFieldList);
-
-        //    if(_localFieldList.Count >=5)
-        //    {
-        //        Debug.Log("STOP");
-        //        _isGrow = false;
-        //    }
-
-           
-        //}
     }
 
     private void CheckBoardDone()
@@ -331,7 +273,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
     private int GetDirection() //generate a random number (1-4)
     {
         var direction = Random.Range(1, 5); //Direction to go
-        var currentID = inputFields.IndexOf(_currentField);
+        var currentID = inputFields.IndexOf(_startField);
 
         switch (direction)
         {
@@ -349,20 +291,20 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private bool CheckDirection(int direction)
     {
-        if (direction < 0 || direction > _inputFields.Count-1) //Check if direction is within board
+        if (direction < 0 || direction > _inputFields.Count) //Check if direction is within board
         {
             Debug.Log("direction is out of board, recalculate");
             return false;
         }
 
         //Check if direction is logical (no wrapping around)
-        if (direction % _sizeX == 0 && direction !< _startField.GetComponent<Field>().fieldID) //If there is no rest, it is the left most column
+        if (direction % _sizeX == 0 /*&& direction !< _startField.GetComponent<Field>().fieldID*/) //If there is no rest, it is the left most column
         {
             Debug.Log("direction on the left most column but is wrapping around, recalculate");
             return false;
         }
 
-        if (direction % (_sizeX - 1) == 0 && direction !> _startField.GetComponent<Field>().fieldID) //If there is no rest, it is on the right most column
+        if (direction % (_sizeX - 1) == 0 /*&& direction !> _startField.GetComponent<Field>().fieldID*/) //If there is no rest, it is on the right most column
         {
             Debug.Log("direction on the right most column but is wrapping around, recalculate");
             return false;
@@ -378,59 +320,17 @@ public class SuguruBoard : MonoBehaviour, IBoard
         _neighbourField = _inputFields[direction];
     }
 
-
-
-
-
-
-
-
-
-
-
-    private void CheckFieldAvailability(GameObject field)
+    private void CheckNeighbourField()
     {
-        var fieldID = field.GetComponent<Field>().fieldID;
-        if (fieldID == 0)
-        {
-            fieldID = _fieldID;
-            _localFieldList.Add(field);
-            _fieldsForIDs.Remove(field);
-            _isStartFieldSet = true;
-        }
+        //check if already in the list
+        //check if ID is 0
+        
+
     }
 
-    private void GetNeighbour()
-    {
-        var index = GetDirection();
 
-        if (index < 0 || index > inputFields.Count) //out of board
-        {
-            index = GetDirection();
-            return;
-        }
 
-        _neighbourField = inputFields[index];
-        //_localFieldList.Add(_neighbourField);
-    }
 
-    
 
-    private void TryGrowNeighbour(List<GameObject> localFieldList)
-    {
-        if(localFieldList.Count < 5)
-        {
-            var neighbourID = _neighbourField.GetComponent<Field>().fieldID;
-            if (neighbourID == 0)
-            {
-                neighbourID = _fieldID;
-                localFieldList.Add(_neighbourField);
-                _fieldsForIDs.Remove(_neighbourField);
-            }
-        }
-        else
-        {
-            _isGrow = false;
-        }
-    }
+
 }
