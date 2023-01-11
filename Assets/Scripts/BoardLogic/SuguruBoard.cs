@@ -53,8 +53,10 @@ public class SuguruBoard : MonoBehaviour, IBoard
     private GameObject _currentField;
     private GameObject _neighbourField;
     private bool _isStartFieldSet = false;
+    private bool _isNeighbourSet = false;
     private bool _isGrow = false;
     private List<GameObject> _localFieldList = new List<GameObject>();
+    private List<int> _directionList = new List<int>();
 
     private void OnEnable()
     {
@@ -213,38 +215,53 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     public void SuguruBoardPieces() //Logic for the grouping of fields
     {
-        CheckBoardDone();
-        GetStartField();
+        ResetSuguruPiecesLogic();
+        var isBoardComplete = false;
 
-        _startField.GetComponent<Image>().color = new Color(0.2f, 0.2f, .8f);
-
-        var direction = GetDirection();
-        bool isDirectionValid = CheckDirection(direction);
-
-
-        if (isDirectionValid)
+        while (!isBoardComplete)
         {
-            GetNeightbourField(direction);
+            //Check Board Done
+            if (_fieldsForIDs.Count <= 0) //No more available tiles
+            {
+                Debug.Log("Board should be completely done");
 
-            _neighbourField.GetComponent<Image>().color = new Color(0.4f, 0.4f, .8f);
+                foreach (GameObject field in _inputFields) //Give each their group ID
+                {
+                    field.GetComponent<TMP_InputField>().text = field.GetComponent<Field>().fieldID.ToString();
+                }
 
-            CheckNeighbourField();
-        }
+                isBoardComplete = true;
+                return;
+            }
 
+            //Start
+            GetStartField();
+            _currentField = _startField;
+            _startField.GetComponent<Image>().color = new Color(0.15f * _fieldID, 0.1f * _fieldID, .8f);
 
+            //Neighbour
+            for (int i = 0; i < (_info.boardSize.x - 1); i++) //for a neighbour group of 7, call 6 times cause parent isn't included yet
+            {
+                _directionList = new List<int>() { 1, 2, 3, 4 };
 
+                while (_directionList.Count > 0)
+                {
+                    //Debug.Log("While loop");
 
+                    var direction = GetDirection();
+                    bool isDirectionValid = CheckDirection(direction);
 
+                    if (isDirectionValid)
+                    {
+                        GetNeightbourField(direction);
 
-    }
+                        CheckNeighbourField();
+                    }
+                }
+            }
 
-    private void CheckBoardDone()
-    {
-        if (_fieldsForIDs.Count <= 0) //No more available tiles
-        {
-            Debug.Log("Board should be completely done");
-            return;
-        }
+            _fieldID++;
+        } 
     }
 
     private void GetStartField() //pick a random field (that doesn't have an ID yet)
@@ -272,12 +289,15 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private int GetDirection() //generate a random number (1-4)
     {
-        var direction = Random.Range(1, 5); //Direction to go
-        var currentID = inputFields.IndexOf(_startField);
+        //remove when failed
 
-        switch (direction)
+        Shuffle(_directionList);
+        var index = _directionList[0];
+        var currentID = inputFields.IndexOf(_currentField);
+
+        switch (index)
         {
-            case 1: //North
+            case 1: //North                
                 return currentID - _sizeX;
             case 2: //Right
                 return currentID + 1;
@@ -291,46 +311,84 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private bool CheckDirection(int direction)
     {
-        if (direction < 0 || direction > _inputFields.Count) //Check if direction is within board
+        var currentID = inputFields.IndexOf(_currentField);
+
+        if (direction < 0 || direction >= _inputFields.Count) //Check if direction is within board
         {
-            Debug.Log("direction is out of board, recalculate");
+            //Debug.Log("direction is out of board, recalculate");
+            _directionList.Remove(_directionList[0]);
             return false;
         }
 
-        //Check if direction is logical (no wrapping around)
-        if (direction % _sizeX == 0 /*&& direction !< _startField.GetComponent<Field>().fieldID*/) //If there is no rest, it is the left most column
+        if (direction / _sizeX == 1 && currentID < direction) //If there is no rest, it is the left most column
         {
-            Debug.Log("direction on the left most column but is wrapping around, recalculate");
-            return false;
+            if (currentID + 1 == direction)
+            {
+                Debug.Log($"{direction} is on the left most column but is wrapping around from {currentID}, recalculate");
+                _directionList.Remove(_directionList[0]);
+                return false;
+            }
         }
 
-        if (direction % (_sizeX - 1) == 0 /*&& direction !> _startField.GetComponent<Field>().fieldID*/) //If there is no rest, it is on the right most column
+        if (direction / (_sizeX - 1) == 1 && currentID > direction) //If there is no rest, it is on the right most column
         {
-            Debug.Log("direction on the right most column but is wrapping around, recalculate");
-            return false;
+            if (currentID - 1 == direction)
+            {
+                Debug.Log($"{direction} is on the right most column but is wrapping around from {currentID}, recalculate");
+                _directionList.Remove(_directionList[0]);
+                return false;
+            }
         }
 
-        Debug.Log("Valid direction");
-        //Get neightbour object
+        //Debug.Log("Valid direction");
         return true;
     }
 
     private void GetNeightbourField(int direction)
     {
-        _neighbourField = _inputFields[direction];
+        _neighbourField = _inputFields[direction]; //ERROR: negative number?
     }
 
     private void CheckNeighbourField()
-    {
-        //check if already in the list
-        //check if ID is 0
-        
+    {        
+        if (_neighbourField.GetComponent<Field>().fieldID != 0 || _localFieldList.Contains(_neighbourField))
+        {
+            //Debug.Log("Neighbour not available");
+            _directionList.Remove(_directionList[0]);
+            return;
+        }
 
+        _isNeighbourSet = true;
+        _neighbourField.GetComponent<Field>().fieldID = _fieldID;
+        _fieldsForIDs.Remove(_neighbourField);
+        _currentField = _neighbourField;
+
+        _localFieldList.Add(_currentField);
+        _neighbourField.GetComponent<Image>().color = new Color(0.15f * _fieldID, 0.1f * _fieldID, .8f);
+        _directionList.Clear();
     }
 
+    private void Shuffle(List<int> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int temp = list[i];
+            int randomIndex = UnityEngine.Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
 
-
-
-
-
+    private void ResetSuguruPiecesLogic()
+    {
+        _fieldID = 1;
+        _startField = null;
+        _currentField = null;
+        _neighbourField = null;
+        _isStartFieldSet = false;
+        _isNeighbourSet = false;
+        _isGrow = false;
+        _localFieldList = new List<GameObject>();
+        _directionList = new List<int>();
+    }
 }

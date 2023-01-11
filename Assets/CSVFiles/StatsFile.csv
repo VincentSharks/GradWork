@@ -1,6 +1,2 @@
 Iteration,Puzzle,Algorithm,Random Seed,Start Time,End Time,Elapsed Time
-1,Sudoku,Depth-First Search v.1,723,10/01/2023 14:59:07,10/01/2023 14:59:09,00:00:00
-2,Sudoku,Depth-First Search v.1,723,10/01/2023 14:59:09,10/01/2023 14:59:10,00:00:01.8187604
-3,Sudoku,Depth-First Search v.1,723,10/01/2023 14:59:10,10/01/2023 14:59:11,00:00:01.1800547
-4,Sudoku,Depth-First Search v.1,723,10/01/2023 14:59:11,10/01/2023 14:59:12,00:00:00.9973982
-5,Sudoku,Depth-First Search v.1,723,10/01/2023 14:59:12,10/01/2023 14:59:13,00:00:01.1896499
+1,Sudoku,Breadth-First Search v.1,195,11/01/2023 10:18:08,11/01/2023 10:18:08,00:00:00
