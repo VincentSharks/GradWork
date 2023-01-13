@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Logic for the Depth Frist Search algorithm (Version 1) (Made with ChatGPT)
+/// Logic for the Depth Frist Search algorithm (Version 1) (Made with support from ChatGPT)
 /// </summary>
 
 public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
@@ -29,19 +29,19 @@ public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
 
     private void OnEnable()
     {
-        _inputs = Info.possibleInputs;
-        _fields = Info.inputFields;
+        _inputs = Info.PossibleInputs;
+        _fields = Info.InputFields;
     }
 
     public void Run()
     {
         _algorithmStart.Invoke();
-        Info.startAlgorithmTime = DateTime.Now;
+        Info.StartAlgorithmTime = DateTime.Now;
 
         CallGenerator();
 
-        Info.endAlgorithmTime = DateTime.Now;
-        Info.isReadyForData = true;
+        Info.EndAlgorithmTime = DateTime.Now;
+        Info.IsReadyForData = true;
         _algorithmEnd.Invoke();
     }
 
@@ -50,16 +50,16 @@ public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
         var info = FindObjectOfType<InfoManager>();
         var board = new List<int>();
 
-        for (int i = 0; i < info.inputFields.Count; i++)
+        for (int i = 0; i < info.InputFields.Count; i++)
         {
             board.Add(0);
         }
 
         var output = Solver(board);
 
-        for (int j = 0; j < info.inputFields.Count; j++)
+        for (int j = 0; j < info.InputFields.Count; j++)
         {
-            info.inputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
+            info.InputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
         }
     }
 

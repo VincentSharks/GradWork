@@ -11,12 +11,12 @@ using UnityEngine;
 
 public interface IBoard
 {
-    public Vector2 dimensions { get; } //Dimensions
-    public bool isBoardSet { get; } //True when board is placed (stops loops)
-    public int lineThiccWidth { get; }
-    public int lineThinWidth { get; }
+    public Vector2 Dimensions { get; } //Dimensions
+    public bool IsBoardSet { get; } //True when board is placed (stops loops)
+    public int LineThickWidth { get; }
+    public int LineThinWidth { get; }
 
-    public List<GameObject> inputFields { get; }
+    public List<GameObject> InputFields { get; }
 
     //Create Board function
     public void CompareValues();

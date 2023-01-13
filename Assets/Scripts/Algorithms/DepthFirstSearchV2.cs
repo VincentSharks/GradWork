@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using System;
 
 /// <summary>
-/// Logic for the Depth-Frist Search algorithm (Version 2) (Made with ChatGPT)
+/// Logic for the Depth-Frist Search algorithm (Version 2) (Made with support from ChatGPT)
 /// </summary>
 
 public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
@@ -29,23 +29,23 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
 
     private void OnEnable()
     {
-        _inputs = Info.possibleInputs;
-        _fields = Info.inputFields;
+        _inputs = Info.PossibleInputs;
+        _fields = Info.InputFields;
     }
     
     public void Run()
     {
-        _inputs = Info.possibleInputs;
-        _fields = Info.inputFields;
+        _inputs = Info.PossibleInputs;
+        _fields = Info.InputFields;
 
 
         _algorithmStart.Invoke();
-        Info.startAlgorithmTime = DateTime.Now;
+        Info.StartAlgorithmTime = DateTime.Now;
 
         CallSolver();
 
-        Info.endAlgorithmTime = DateTime.Now;
-        Info.isReadyForData = true;
+        Info.EndAlgorithmTime = DateTime.Now;
+        Info.IsReadyForData = true;
         _algorithmEnd.Invoke();
     }
 
@@ -54,16 +54,16 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
         var info = FindObjectOfType<InfoManager>();
         var board = new List<int>();
 
-        for (int i = 0; i < Info.inputFields.Count; i++)
+        for (int i = 0; i < Info.InputFields.Count; i++)
         {
             board.Add(0);
         }
 
         var output = Solver(board);
 
-        for (int j = 0; j < Info.inputFields.Count; j++)
+        for (int j = 0; j < Info.InputFields.Count; j++)
         {
-            Info.inputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
+            Info.InputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
         }
     }
     
@@ -86,7 +86,7 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
     // This function uses DFS to try all possible numbers for a given cell and continues the search until a solution is found or all possibilities have been exhausted.
     private bool DFS(List<List<int>> board, int row, int col)
     {        
-        if (row == Info.boardSize.y) // If the end of the board has been reached, a solution has been found.
+        if (row == Info.BoardSize.y) // If the end of the board has been reached, a solution has been found.
         {
             return true;
         }
@@ -120,7 +120,7 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
     // This function moves to the next cell in the board. If the end of the row has been reached, it moves to the first cell of the next row.
     private bool DFSNextCell(List<List<int>> board, int row, int col)
     {
-        if (col == Info.boardSize.x-1)
+        if (col == Info.BoardSize.x-1)
         {
             return DFS(board, row + 1, 0);
         }
@@ -141,12 +141,12 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
     private List<List<int>> ConvertTo2D(List<int> board)
     {
         List<List<int>> board2D = new List<List<int>>();
-        for (int i = 0; i < Info.boardSize.y; i++)
+        for (int i = 0; i < Info.BoardSize.y; i++)
         {
             List<int> row = new List<int>();
-            for (int j = 0; j < Info.boardSize.x; j++)
+            for (int j = 0; j < Info.BoardSize.x; j++)
             {
-                row.Add(board[i * (int)Info.boardSize.x + j]);
+                row.Add(board[i * (int)Info.BoardSize.x + j]);
             }
             board2D.Add(row);
         }
@@ -157,9 +157,9 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
     private List<int> ConvertTo1D(List<List<int>> board)
     {
         List<int> board1D = new List<int>();
-        for (int i = 0; i < Info.boardSize.y; i++)
+        for (int i = 0; i < Info.BoardSize.y; i++)
         {
-            for (int j = 0; j < Info.boardSize.x; j++)
+            for (int j = 0; j < Info.BoardSize.x; j++)
             {
                 board1D.Add(board[i][j]);
             }

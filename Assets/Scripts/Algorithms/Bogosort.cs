@@ -29,8 +29,8 @@ public class Bogosort : MonoBehaviour, IAlgorithm
 
     private void OnEnable()
     {
-        _inputs = Info.possibleInputs;
-        _fields = Info.inputFields;
+        _inputs = Info.PossibleInputs;
+        _fields = Info.InputFields;
     }
 
     public void Run()
@@ -38,12 +38,12 @@ public class Bogosort : MonoBehaviour, IAlgorithm
         EmptyField();
 
         _algorithmStart.Invoke();
-        Info.startAlgorithmTime = DateTime.Now;
+        Info.StartAlgorithmTime = DateTime.Now;
 
         FillInField();
 
-        Info.endAlgorithmTime = DateTime.Now;
-        Info.isReadyForData = true;
+        Info.EndAlgorithmTime = DateTime.Now;
+        Info.IsReadyForData = true;
         _algorithmEnd.Invoke();
     }
 

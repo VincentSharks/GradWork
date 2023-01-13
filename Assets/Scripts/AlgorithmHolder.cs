@@ -31,7 +31,7 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
         for (int i = 0; i < this.transform.childCount; i++)
         {
             this.transform.GetChild(i).gameObject.SetActive(false);
-            _info.isAlgorithmSet = false;
+            _info.IsAlgorithmSet = false;
         }
     }
 
@@ -57,15 +57,15 @@ public class AlgorithmHolder : MonoBehaviour, IHolder
                 break; //None selected
             case 1:
                 this.transform.GetChild(index - 1).gameObject.SetActive(true); //Bogosort
-                _info.isAlgorithmSet = true;
+                _info.IsAlgorithmSet = true;
                 break;
             case 2:
                 this.transform.GetChild(index - 1).gameObject.SetActive(true); //DFS
-                _info.isAlgorithmSet = true;
+                _info.IsAlgorithmSet = true;
                 break;
             case 3:
                 this.transform.GetChild(index - 1).gameObject.SetActive(true); //BFS
-                _info.isAlgorithmSet = true;
+                _info.IsAlgorithmSet = true;
                 break;
         }
     }

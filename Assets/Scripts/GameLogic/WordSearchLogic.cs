@@ -50,7 +50,7 @@ public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
 
     private void Update()
     {
-        _inputFields = _info.inputFields;
+        _inputFields = _info.InputFields;
 
         AddListener();
     }
@@ -60,7 +60,7 @@ public class WordSearchLogic : MonoBehaviour, IPuzzleLogic
         if(!_eventListenerSet)
         {
             //if algorithm is selected
-            if (_info.isAlgorithmSelected)
+            if (_info.IsAlgorithmSelected)
             {
                 _algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
                 _algorithmEndEvent.AddListener(() => ChangeToLetters(_inputFields));

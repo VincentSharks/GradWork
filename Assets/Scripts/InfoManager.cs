@@ -13,50 +13,50 @@ public class InfoManager : MonoBehaviour
 {
     [Header("Board")]
     [SerializeField] private GameObject _puzzleDropDown;
-    public string puzzleName;    
+    public string PuzzleName;    
     [SerializeField] private GameObject _boardHolder;
     private GameObject _activeBoard;
     private IBoard _activeBoardLogic;
     public IPuzzleLogic activePuzzleLogic;
     
-    public Vector2 boardSize;
-    public List<GameObject> inputFields;
-    public bool isPuzzleSelected = false;
+    public Vector2 BoardSize;
+    public List<GameObject> InputFields;
+    public bool IsPuzzleSelected = false;
 
     [Header("PuzzleLogic")]
-    public List<int> possibleInputs;
+    public List<int> PossibleInputs;
 
     [Header("Algorithm")]
     [SerializeField] private GameObject _algorithDropDown;
-    public string algorithmName;
+    public string AlgorithmName;
     [SerializeField] private GameObject _algorithmHolder;
-    public int algorithmVersion;
-    public bool isAlgorithmSelected = false;
-    public bool isAlgorithmSet = false;
+    public int AlgorithmVersion;
+    public bool IsAlgorithmSelected = false;
+    public bool IsAlgorithmSet = false;
 
     [Header("Iterations")]
     [SerializeField] private GameObject _iterationsDropDown;
-    public int iterationsAmount = 1;
+    public int IterationsAmount = 1;
 
     [Header("Timer")]
-    public DateTime startAlgorithmTime;
-    public DateTime endAlgorithmTime;
-    public TimeSpan elapsedTime;
+    public DateTime StartAlgorithmTime;
+    public DateTime EndAlgorithmTime;
+    public TimeSpan ElapsedTime;
 
     [Header("Data")]
     [SerializeField] private CSVManager _csv;
-    public bool isExportData = false;
-    public bool isReadyForData = false;
+    public bool IsExportData = false;
+    public bool IsReadyForData = false;
 
-    public List<string> boardData = new List<string>();
-    public List<bool> boardIsValid = new List<bool>();
-    public List<DateTime> startTimes = new List<DateTime>();
-    public List<DateTime> endTimes = new List<DateTime>();
-    public List<TimeSpan> elapsedTimes = new List<TimeSpan>();
+    public List<string> BoardData = new List<string>();
+    public List<bool> BoardIsValid = new List<bool>();
+    public List<DateTime> StartTimes = new List<DateTime>();
+    public List<DateTime> EndTimes = new List<DateTime>();
+    public List<TimeSpan> ElapsedTimes = new List<TimeSpan>();
 
 
     public int RandomSeed { get; set; }
-    public bool isValuesChanged = false; //Bool to set to true in oter scripts when a parameter is changed
+    public bool IsValuesChanged = false; //Bool to set to true in oter scripts when a parameter is changed
 
     private UnityEvent _algorithmEndEvent;
     private bool _eventListenerSet = false;
@@ -65,35 +65,35 @@ public class InfoManager : MonoBehaviour
     {
         RandomSeed = DateTime.Now.Millisecond;
         UnityEngine.Random.InitState(RandomSeed);
-        algorithmVersion = 0;
+        AlgorithmVersion = 0;
     }
 
     private void OnEnable()
     {
-        inputFields = new List<GameObject>();
-        possibleInputs = new List<int>();
+        InputFields = new List<GameObject>();
+        PossibleInputs = new List<int>();
     }
 
     public void IsChanged()
     {
-        isValuesChanged = true;
+        IsValuesChanged = true;
     }
 
     private void Update()
     {
-        if(isValuesChanged)
+        if(IsValuesChanged)
         {
             //Check info
             GetBoardInfo();
             GetAlgorithmInfo();
             GetIterationInfo();
 
-            isValuesChanged = false;
+            IsValuesChanged = false;
         }
 
-        if(isExportData)
+        if(IsExportData)
         {
-            isExportData = false;
+            IsExportData = false;
         }
     }
 
@@ -105,11 +105,11 @@ public class InfoManager : MonoBehaviour
         
         if (selectedID <= 0)
         {
-            isPuzzleSelected = false;
+            IsPuzzleSelected = false;
             return;
         }
 
-        puzzleName = dropdown.options[selectedID].text;
+        PuzzleName = dropdown.options[selectedID].text;
 
         var board = _activeBoard;
         
@@ -125,11 +125,11 @@ public class InfoManager : MonoBehaviour
         }
 
         _activeBoardLogic = _activeBoard.GetComponent<IBoard>();
-        boardSize = _activeBoardLogic.dimensions;
-        inputFields = _activeBoardLogic.inputFields;
+        BoardSize = _activeBoardLogic.Dimensions;
+        InputFields = _activeBoardLogic.InputFields;
 
 
-        isPuzzleSelected = true;
+        IsPuzzleSelected = true;
 
         GetPuzzleLogicInfo();
     }
@@ -137,7 +137,7 @@ public class InfoManager : MonoBehaviour
     private void GetPuzzleLogicInfo()
     {
         activePuzzleLogic = _activeBoard.GetComponent<IPuzzleLogic>();
-        possibleInputs = activePuzzleLogic.PossibleInputs;
+        PossibleInputs = activePuzzleLogic.PossibleInputs;
     }
 
     private void GetAlgorithmInfo()
@@ -147,22 +147,22 @@ public class InfoManager : MonoBehaviour
         
         if(selectedID <= 0)
         {
-            isAlgorithmSelected = false;
-            isAlgorithmSet = false;
+            IsAlgorithmSelected = false;
+            IsAlgorithmSet = false;
             return;
         }
 
-        algorithmName = dropdown.options[selectedID].text;
+        AlgorithmName = dropdown.options[selectedID].text;
 
         var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
 
         if (algorithmComponent != null)
         {
-            algorithmVersion = algorithmComponent.AlgorithmVersion;
+            AlgorithmVersion = algorithmComponent.AlgorithmVersion;
         }        
         
-        isAlgorithmSelected = true;
-        isAlgorithmSet = true;
+        IsAlgorithmSelected = true;
+        IsAlgorithmSet = true;
 
         AddListener();
     }
@@ -172,24 +172,25 @@ public class InfoManager : MonoBehaviour
         var iterationsDropDown = _iterationsDropDown.GetComponent<TMP_Dropdown>();
         var selectedID = iterationsDropDown.value;
         var selectedString = iterationsDropDown.options[selectedID].text;
-        iterationsAmount = Convert.ToInt32(selectedString);
+        IterationsAmount = Convert.ToInt32(selectedString);
     }
 
     public void RunCombo() //Run button
     {
         var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
 
-        for (int i = 0; i < iterationsAmount; i++)
+        for (int i = 0; i < IterationsAmount; i++)
         {
             algorithmComponent.Run();
             GetElapsedTime();
-            isExportData = true;
+            IsExportData = true;
         }
     }
 
     public void GetElapsedTime()
     {
-        elapsedTime = endAlgorithmTime - startAlgorithmTime;
+        ElapsedTime = EndAlgorithmTime - StartAlgorithmTime;
+        
     }
 
     private void AddListener()
@@ -202,7 +203,7 @@ public class InfoManager : MonoBehaviour
             _algorithmEndEvent.AddListener(() => _csv.GetBoardData());
 
             //if algorithm is selected
-            if (isAlgorithmSelected)
+            if (IsAlgorithmSelected)
             {
                 _eventListenerSet = true;
             }
@@ -213,12 +214,12 @@ public class InfoManager : MonoBehaviour
     {
         var puzzle = FindObjectOfType<SudokuLogic>();
 
-        foreach (string board in boardData)
+        foreach (string board in BoardData)
         {
             string value = board.Replace(" ", "");
             var intList = value.Select(digit => int.Parse(digit.ToString()));
 
-            boardIsValid.Add(puzzle.CheckBoard(intList.ToList()));
+            BoardIsValid.Add(puzzle.CheckBoard(intList.ToList()));
         }
     }
 }

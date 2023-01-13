@@ -58,9 +58,9 @@ public class CSVManager : MonoBehaviour
         //Open the file again and write in the data
         tw = new StreamWriter(path, true);
 
-        foreach (string board in _info.boardData)
+        foreach (string board in _info.BoardData)
         {
-            tw.WriteLine((_info.boardData.IndexOf(board) + 1) + "," + $"{board}");
+            tw.WriteLine((_info.BoardData.IndexOf(board) + 1) + "," + $"{board}");
         }
 
         tw.Close();
@@ -69,15 +69,15 @@ public class CSVManager : MonoBehaviour
     {
         _fieldList = "";
 
-        if (_info.isReadyForData)
+        if (_info.IsReadyForData)
         {
-            foreach (GameObject go in _info.inputFields)
+            foreach (GameObject go in _info.InputFields)
             {
                 _fieldList += go.GetComponent<TMP_InputField>().text;
                 _fieldList += " ";
             }
 
-            _info.isReadyForData = false;
+            _info.IsReadyForData = false;
 
             return _fieldList;
         }
@@ -85,16 +85,16 @@ public class CSVManager : MonoBehaviour
     }
     public void GetBoardData() //Put the board in 
     {
-        if (_info.iterationsAmount > 0)
+        if (_info.IterationsAmount > 0)
         {
-            if (_info.isReadyForData)
+            if (_info.IsReadyForData)
             {
                 var fieldAsString = BoardData();
 
                 if (fieldAsString != "")
                 {
                     Debug.Log("Succes entry");
-                    _info.boardData.Add(fieldAsString);
+                    _info.BoardData.Add(fieldAsString);
                 }
             }
         }
@@ -114,25 +114,25 @@ public class CSVManager : MonoBehaviour
         //Open the file again and write in the data
         tw = new StreamWriter(path, true);
 
-        for (int i = 1; i <= _info.iterationsAmount; i++)
+        for (int i = 1; i <= _info.IterationsAmount; i++)
         {
             //1 | Sudoku | Dummy V1 | start time | end time | elapsed time
-            tw.WriteLine(i + spacer + _info.puzzleName + spacer + _info.algorithmName + " v." + _info.algorithmVersion + spacer + _info.RandomSeed + spacer + 
-                _info.startTimes.ToArray().GetValue(i-1) + spacer + _info.endTimes.ToArray().GetValue(i-1) + spacer + _info.elapsedTimes.ToArray().GetValue(i - 1));
+            tw.WriteLine(i + spacer + _info.PuzzleName + spacer + _info.AlgorithmName + " v." + _info.AlgorithmVersion + spacer + _info.RandomSeed + spacer + 
+                _info.StartTimes.ToArray().GetValue(i-1) + spacer + _info.EndTimes.ToArray().GetValue(i-1) + spacer + _info.ElapsedTimes.ToArray().GetValue(i - 1));
         }
 
         tw.Close();
     }
     public void GetStatsData()
     {
-        if (_info.iterationsAmount > 0)
+        if (_info.IterationsAmount > 0)
         {
-            if (_info.isReadyForData)
+            if (_info.IsReadyForData)
             {
-                _info.startTimes.Add(_info.startAlgorithmTime);
-                _info.endTimes.Add(_info.endAlgorithmTime);
+                _info.StartTimes.Add(_info.StartAlgorithmTime);
+                _info.EndTimes.Add(_info.EndAlgorithmTime);
 
-                _info.elapsedTimes.Add(_info.elapsedTime);
+                _info.ElapsedTimes.Add(_info.ElapsedTime);
             }
         }
     }

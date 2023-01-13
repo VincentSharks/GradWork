@@ -183,7 +183,7 @@ public class SudokuLogic : MonoBehaviour, IPuzzleLogic
     /// <summary> check if next input is valid </summary>    
     public bool IsValidNumber(List<List<int>> board, int row, int col, int num, InfoManager info) // This function checks if a given number is valid for a given cell in the Sudoku board.
     {
-        for (int i = 0; i < info.boardSize.x; i++) // Check the row.
+        for (int i = 0; i < info.BoardSize.x; i++) // Check the row.
         {
             if (board[row][i] == num)
             {
@@ -191,7 +191,7 @@ public class SudokuLogic : MonoBehaviour, IPuzzleLogic
             }
         }
 
-        for (int i = 0; i < info.boardSize.y; i++) // Check the column.
+        for (int i = 0; i < info.BoardSize.y; i++) // Check the column.
         {
             if (board[i][col] == num)
             {

@@ -15,12 +15,12 @@ public class SuguruBoard : MonoBehaviour, IBoard
     private int _sizeX;
     private int _sizeY;
 
-    public Vector2 dimensions { get { return new Vector2(_sizeX, _sizeY); } set { value = new Vector2(_sizeX, _sizeY); } }
+    public Vector2 Dimensions { get { return new Vector2(_sizeX, _sizeY); } set { value = new Vector2(_sizeX, _sizeY); } }
 
     private int _dimX;
     private int _dimY;
 
-    public bool isBoardSet { get { return false; } set { value = false; } } //false
+    public bool IsBoardSet { get { return false; } set { value = false; } } //false
 
     private float _spacing;
 
@@ -30,7 +30,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
     [Header("Fields")]
     [SerializeField] private GameObject _inputBox;
     private List<GameObject> _inputFields = new List<GameObject>();
-    public List<GameObject> inputFields { get { return _inputFields; } }
+    public List<GameObject> InputFields { get { return _inputFields; } }
     private List<GameObject> _fieldsForIDs = new List<GameObject>();
     [SerializeField] private GameObject _fieldHolder;
     private GridLayoutGroup _fieldGrid;
@@ -42,8 +42,8 @@ public class SuguruBoard : MonoBehaviour, IBoard
     private List<GameObject> _lines = new List<GameObject>();
     [SerializeField] private GameObject _lineHolder;
 
-    public int lineThinWidth { get { return 5; } set { value = 5; } }
-    public int lineThiccWidth { get { return 10; } set { value = 10; } }
+    public int LineThinWidth { get { return 5; } set { value = 5; } }
+    public int LineThickWidth { get { return 10; } set { value = 10; } }
 
 
     [Header("Suguru specific")]
@@ -71,7 +71,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
         _uiHand = FindObjectOfType<UIHandler>();
         _uiHand.SetUpSlider(true, true, _valueMin, _valueMax, _sizeX, _sizeY);
 
-        if (!isBoardSet)
+        if (!IsBoardSet)
         {
             CreateBoard();
         }
@@ -88,16 +88,16 @@ public class SuguruBoard : MonoBehaviour, IBoard
         _sizeX = _uiHand.GetXSliderValue();
         _sizeY = _uiHand.GetYSliderValue();
 
-        dimensions = new Vector2(_sizeX, _sizeY);
+        Dimensions = new Vector2(_sizeX, _sizeY);
 
-        if (_dimX != dimensions.x || _dimY != dimensions.y) //Dimension changed
+        if (_dimX != Dimensions.x || _dimY != Dimensions.y) //Dimension changed
         {
             DeleteBoard();
 
             //info manager value change
-            _info.isValuesChanged = true;
+            _info.IsValuesChanged = true;
 
-            if (dimensions.y > dimensions.x) //Change to fixed row
+            if (Dimensions.y > Dimensions.x) //Change to fixed row
             {
                 _fieldGrid.constraint = GridLayoutGroup.Constraint.FixedRowCount;
                 _fieldGrid.constraintCount = _sizeY;
@@ -130,7 +130,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
         SpawnInputFields();
         SpawnLines();
-        isBoardSet = true;
+        IsBoardSet = true;
     }
 
     public void DeleteBoard()
@@ -147,7 +147,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
         _inputFields.Clear();
         _fieldsForIDs.Clear();
         _lines.Clear();
-        isBoardSet = false;
+        IsBoardSet = false;
     }
 
     public void SpawnInputFields()
@@ -167,11 +167,11 @@ public class SuguruBoard : MonoBehaviour, IBoard
     {
         var outerLineAddition = 10; //The outer lines don't connect in the corners, with this they connect
 
-        for (int indexX = 0; indexX <= dimensions.x; indexX++) //X
+        for (int indexX = 0; indexX <= Dimensions.x; indexX++) //X
         {
             var verticalLine = Instantiate(_linePixel, _lineHolder.transform);
 
-            for (int indexY = 0; indexY <= dimensions.y; indexY++)
+            for (int indexY = 0; indexY <= Dimensions.y; indexY++)
             {
                 var horizontalLine = Instantiate(_linePixel, _lineHolder.transform);
 
@@ -180,19 +180,19 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
                 if (indexX == 0 || indexY == 0) //Outer edge left & bottom
                 {
-                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(lineThiccWidth, totalHeight + outerLineAddition, 1);
+                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThickWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3(-1 * (totalWidth / 2.0f), 0, 0);
 
-                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, lineThiccWidth, 1);
+                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThickWidth, 1);
                     horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, -1 * (totalHeight / 2.0f), 0);
 
                 }
-                else if (indexX % (dimensions.x) == 1 || indexY % (dimensions.y) == 1)
+                else if (indexX % (Dimensions.x) == 1 || indexY % (Dimensions.y) == 1)
                 {
-                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(lineThiccWidth, totalHeight + outerLineAddition, 1);
+                    verticalLine.GetComponent<RectTransform>().localScale = new Vector3(LineThickWidth, totalHeight + outerLineAddition, 1);
                     verticalLine.GetComponent<RectTransform>().localPosition = new Vector3((totalWidth / 2.0f), 0, 0);
 
-                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, lineThiccWidth, 1);
+                    horizontalLine.GetComponent<RectTransform>().localScale = new Vector3(totalWidth + outerLineAddition, LineThickWidth, 1);
                     horizontalLine.GetComponent<RectTransform>().localPosition = new Vector3(0, (totalHeight / 2.0f), 0);
                 }
                 else
@@ -220,7 +220,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
             {
                 foreach (GameObject field in _inputFields) //Give each their group ID
                 {
-                    field.GetComponent<TMP_InputField>().text = field.GetComponent<Field>().fieldID.ToString();
+                    field.GetComponent<TMP_InputField>().text = field.GetComponent<Field>().FieldID.ToString();
                 }
 
                 isBoardComplete = true;
@@ -233,7 +233,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
             _startField.GetComponent<Image>().color = new Color(0.15f * _fieldID, 0.1f * _fieldID, .8f);
 
             //Neighbour
-            for (int i = 0; i < (_info.boardSize.x - 1); i++) //for a neighbour group of 7, call 6 times cause parent isn't included yet
+            for (int i = 0; i < 4; i++) //for a neighbour group of 7, call 6 times cause parent isn't included yet
             {
                 _directionList = new List<int>() { 1, 2, 3, 4 };
 
@@ -268,10 +268,10 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private void CheckStartFieldAvailability(GameObject field)
     {
-        var fieldID = field.GetComponent<Field>().fieldID;
+        var fieldID = field.GetComponent<Field>().FieldID;
         if (fieldID == 0)
         {
-            field.GetComponent<Field>().fieldID = _fieldID;
+            field.GetComponent<Field>().FieldID = _fieldID;
             _localFieldList.Add(field);
             _fieldsForIDs.Remove(field);
             _isStartFieldSet = true;
@@ -282,7 +282,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
     {
         Shuffle(_directionList);
         var index = _directionList[0];
-        var currentID = inputFields.IndexOf(_currentField);
+        var currentID = InputFields.IndexOf(_currentField);
 
         switch (index)
         {
@@ -300,7 +300,7 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private bool CheckDirection(int direction)
     {
-        var currentID = inputFields.IndexOf(_currentField);
+        var currentID = InputFields.IndexOf(_currentField);
 
         if (direction < 0 || direction >= _inputFields.Count) //Check if direction is within board
         {
@@ -337,13 +337,13 @@ public class SuguruBoard : MonoBehaviour, IBoard
 
     private void CheckNeighbourField()
     {
-        if (_neighbourField.GetComponent<Field>().fieldID != 0 || _localFieldList.Contains(_neighbourField))
+        if (_neighbourField.GetComponent<Field>().FieldID != 0 || _localFieldList.Contains(_neighbourField))
         {
             _directionList.Remove(_directionList[0]);
             return;
         }
 
-        _neighbourField.GetComponent<Field>().fieldID = _fieldID;
+        _neighbourField.GetComponent<Field>().FieldID = _fieldID;
         _fieldsForIDs.Remove(_neighbourField);
         _currentField = _neighbourField;
 

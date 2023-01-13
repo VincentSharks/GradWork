@@ -38,13 +38,13 @@ public class UIHandler : MonoBehaviour
 
     private void SetBoardInfoUI()
     {
-        _selectedPuzzle.text = " " + _info.puzzleName;
-        _boardSize.text = " [X:" + _info.boardSize.x + ", Y: " + _info.boardSize.y + "]";
+        _selectedPuzzle.text = " " + _info.PuzzleName;
+        _boardSize.text = " [X:" + _info.BoardSize.x + ", Y: " + _info.BoardSize.y + "]";
     }
 
     private void SetAlgorithmInfoUI()
     {
-        _selectedAlgorithm.text = " " + _info.algorithmName + " " + " v." + _info.algorithmVersion;
+        _selectedAlgorithm.text = " " + _info.AlgorithmName + " " + " v." + _info.AlgorithmVersion;
     }
 
     private void SetOtherInfoUI()
@@ -87,7 +87,7 @@ public class UIHandler : MonoBehaviour
 
     private void SetUpRunButton()
     {
-        if(!_info.isPuzzleSelected || !_info.isAlgorithmSelected)
+        if(!_info.IsPuzzleSelected || !_info.IsAlgorithmSelected)
         {
             _runButton.SetActive(false);
             return;
