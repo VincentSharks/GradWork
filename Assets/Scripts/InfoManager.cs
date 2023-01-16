@@ -42,6 +42,7 @@ public class InfoManager : MonoBehaviour
     public DateTime StartAlgorithmTime;
     public DateTime EndAlgorithmTime;
     public TimeSpan ElapsedTime;
+    public double TimeDifference;
 
     [Header("Data")]
     [SerializeField] private CSVManager _csv;
@@ -53,6 +54,7 @@ public class InfoManager : MonoBehaviour
     public List<DateTime> StartTimes = new List<DateTime>();
     public List<DateTime> EndTimes = new List<DateTime>();
     public List<TimeSpan> ElapsedTimes = new List<TimeSpan>();
+    public List<double> ElapsedMiliseconds = new List<double>();
 
 
     public int RandomSeed { get; set; }
@@ -189,8 +191,10 @@ public class InfoManager : MonoBehaviour
 
     public void GetElapsedTime()
     {
-        ElapsedTime = EndAlgorithmTime - StartAlgorithmTime;
-        
+        var timeDifference = EndAlgorithmTime - StartAlgorithmTime;
+
+        ElapsedTime = timeDifference;
+        TimeDifference = ElapsedTime.TotalMilliseconds;
     }
 
     private void AddListener()

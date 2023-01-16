@@ -108,7 +108,7 @@ public class CSVManager : MonoBehaviour
         TextWriter tw = new StreamWriter(path, false);
 
         //Iteration | Puzzle | Algorithm | Random Seed | Start Time | End Time | Elapsed Time | Hoeveel ticks? | Hoeveel garbage?
-        tw.WriteLine("Iteration" + spacer + "Puzzle" + spacer + "Algorithm" + spacer + "Random Seed" + spacer + "Start Time" + spacer + "End Time" + spacer + "Elapsed Time");
+        tw.WriteLine("Iteration" + spacer + "Puzzle" + spacer + "Algorithm" + spacer + "Random Seed" + spacer + "Start Time" + spacer + "End Time" + spacer + "Elapsed Time" + spacer + "Elapsed Milliseconds");
         tw.Close();
 
         //Open the file again and write in the data
@@ -118,7 +118,7 @@ public class CSVManager : MonoBehaviour
         {
             //1 | Sudoku | Dummy V1 | start time | end time | elapsed time
             tw.WriteLine(i + spacer + _info.PuzzleName + spacer + _info.AlgorithmName + " v." + _info.AlgorithmVersion + spacer + _info.RandomSeed + spacer + 
-                _info.StartTimes.ToArray().GetValue(i-1) + spacer + _info.EndTimes.ToArray().GetValue(i-1) + spacer + _info.ElapsedTimes.ToArray().GetValue(i - 1));
+                _info.StartTimes.ToArray().GetValue(i-1) + spacer + _info.EndTimes.ToArray().GetValue(i-1) + spacer + _info.ElapsedTimes.ToArray().GetValue(i - 1) + spacer + _info.ElapsedMiliseconds.ToArray().GetValue(i-1));
         }
 
         tw.Close();
@@ -133,6 +133,7 @@ public class CSVManager : MonoBehaviour
                 _info.EndTimes.Add(_info.EndAlgorithmTime);
 
                 _info.ElapsedTimes.Add(_info.ElapsedTime);
+                _info.ElapsedMiliseconds.Add(_info.TimeDifference);
             }
         }
     }
