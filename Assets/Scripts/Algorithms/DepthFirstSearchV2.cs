@@ -26,13 +26,15 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
     private UnityEvent _algorithmStart = new UnityEvent();
     public UnityEvent AlgorithmStart { get { return _algorithmStart; } }
 
+    private const int EMPTYCELL = -1;
+    //private const int INVALIDCELL = -1;
 
     private void OnEnable()
     {
         _inputs = Info.PossibleInputs;
         _fields = Info.InputFields;
     }
-    
+
     public void Run()
     {
         _inputs = Info.PossibleInputs;
@@ -54,9 +56,10 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
         var info = FindObjectOfType<InfoManager>();
         var board = new List<int>();
 
+        //make board and fill with -1 so they are seen as not filled in cells
         for (int i = 0; i < Info.InputFields.Count; i++)
         {
-            board.Add(0);
+            board.Add(EMPTYCELL);
         }
 
         var output = Solver(board);
@@ -66,12 +69,12 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
             Info.InputFields[j].GetComponent<TMP_InputField>().text = output[j].ToString();
         }
     }
-    
+
     private List<int> Solver(List<int> board) // This function takes a 1D list of integers representing a Sudoku board and returns a solved version of the board using a DFS algorithm.
-    {        
+    {
         List<List<int>> board2D = ConvertTo2D(board); // Convert the 1D list to a 2D list.        
         bool solved = DFS(board2D, 0, 0); // Start the DFS at the first cell.
-        
+
         if (solved) // If the board was solved, convert it back to a 1D list and return it. Otherwise, return an empty list.
         {
             return ConvertTo1D(board2D);
@@ -85,20 +88,20 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
 
     // This function uses DFS to try all possible numbers for a given cell and continues the search until a solution is found or all possibilities have been exhausted.
     private bool DFS(List<List<int>> board, int row, int col)
-    {        
+    {
         if (row == Info.BoardSize.y) // If the end of the board has been reached, a solution has been found.
         {
             return true;
         }
-        
-        if (board[row][col] != 0) // If the current cell is not empty, move on to the next cell.
+
+        if (board[row][col] != EMPTYCELL) // If the current cell is not empty, move on to the next cell.
         {
             return DFSNextCell(board, row, col);
         }
-        
+
         Shuffle(_inputs); // Create a list of possible numbers and shuffle it.
 
-        
+
         for (int i = 1; i <= _inputs.Count; i++) // Try all possible numbers for the current cell.
         {
             var index = _inputs[i - 1]; // If the number is valid for the current cell, set the cell to that number and continue the search.
@@ -112,15 +115,15 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
                 }
             }
         }
-        
-        board[row][col] = 0; // If no solution was found, reset the current cell to 0 and backtrack.
+
+        board[row][col] = EMPTYCELL; // If no solution was found, reset the current cell to 0 and backtrack.
         return false;
     }
 
     // This function moves to the next cell in the board. If the end of the row has been reached, it moves to the first cell of the next row.
     private bool DFSNextCell(List<List<int>> board, int row, int col)
     {
-        if (col == Info.BoardSize.x-1)
+        if (col == Info.BoardSize.x - 1)
         {
             return DFS(board, row + 1, 0);
         }
@@ -177,5 +180,5 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
-    }    
+    }
 }

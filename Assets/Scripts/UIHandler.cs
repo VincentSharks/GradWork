@@ -18,7 +18,7 @@ public class UIHandler : MonoBehaviour
 
     [SerializeField] private TMP_Text _selectedAlgorithm;
     [SerializeField] private TMP_Text _randomSeed;
-           
+
     [SerializeField] private GameObject _xSlider;
     [SerializeField] private GameObject _ySlider;
     [SerializeField] private GameObject _runButton;
@@ -44,7 +44,10 @@ public class UIHandler : MonoBehaviour
 
     private void SetAlgorithmInfoUI()
     {
-        _selectedAlgorithm.text = " " + _info.AlgorithmName + " " + " v." + _info.AlgorithmVersion;
+        if (_info._currentAlgorithm != null)
+            _selectedAlgorithm.text = " " + _info.AlgorithmName + " " + " v." + _info.AlgorithmVersion;
+        else
+            _selectedAlgorithm.text = " No algorithm selected";
     }
 
     private void SetOtherInfoUI()
@@ -56,9 +59,9 @@ public class UIHandler : MonoBehaviour
     {
         _xSlider.SetActive(enable);
         _ySlider.SetActive(enableY);
-        
+
         if (!enable) //sliders disabled
-        {           
+        {
             return;
         }
 
@@ -67,7 +70,7 @@ public class UIHandler : MonoBehaviour
         x.minValue = sliderMin;
         x.maxValue = sliderMax;
         x.value = valueX;
-        
+
         //Y Slider
         var y = _ySlider.GetComponent<Slider>();
         y.minValue = sliderMin;
@@ -87,7 +90,7 @@ public class UIHandler : MonoBehaviour
 
     private void SetUpRunButton()
     {
-        if(!_info.IsPuzzleSelected || !_info.IsAlgorithmSelected)
+        if (!_info.IsPuzzleSelected || !_info.IsAlgorithmSelected)
         {
             _runButton.SetActive(false);
             return;

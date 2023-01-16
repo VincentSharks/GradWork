@@ -13,12 +13,12 @@ public class InfoManager : MonoBehaviour
 {
     [Header("Board")]
     [SerializeField] private GameObject _puzzleDropDown;
-    public string PuzzleName;    
+    public string PuzzleName;
     [SerializeField] private GameObject _boardHolder;
     private GameObject _activeBoard;
     private IBoard _activeBoardLogic;
     public IPuzzleLogic activePuzzleLogic;
-    
+
     public Vector2 BoardSize;
     public List<GameObject> InputFields;
     public bool IsPuzzleSelected = false;
@@ -30,6 +30,7 @@ public class InfoManager : MonoBehaviour
     [SerializeField] private GameObject _algorithDropDown;
     public string AlgorithmName;
     [SerializeField] private GameObject _algorithmHolder;
+    public IAlgorithm _currentAlgorithm = null;
     public int AlgorithmVersion;
     public bool IsAlgorithmSelected = false;
     public bool IsAlgorithmSet = false;
@@ -83,7 +84,7 @@ public class InfoManager : MonoBehaviour
 
     private void Update()
     {
-        if(IsValuesChanged)
+        if (IsValuesChanged)
         {
             //Check info
             GetBoardInfo();
@@ -93,7 +94,7 @@ public class InfoManager : MonoBehaviour
             IsValuesChanged = false;
         }
 
-        if(IsExportData)
+        if (IsExportData)
         {
             IsExportData = false;
         }
@@ -104,7 +105,7 @@ public class InfoManager : MonoBehaviour
         //Get board name
         var dropdown = _puzzleDropDown.GetComponent<TMP_Dropdown>();
         var selectedID = dropdown.value;
-        
+
         if (selectedID <= 0)
         {
             IsPuzzleSelected = false;
@@ -114,13 +115,13 @@ public class InfoManager : MonoBehaviour
         PuzzleName = dropdown.options[selectedID].text;
 
         var board = _activeBoard;
-        
+
         //Get active board
         _activeBoard = _boardHolder.transform.GetChild(selectedID - 1).gameObject;
 
         if (board != null)
         {
-            if(board != _activeBoard) //See if board has changed
+            if (board != _activeBoard) //See if board has changed
             {
                 _algorithDropDown.GetComponent<TMP_Dropdown>().value = 0;
             }
@@ -143,11 +144,11 @@ public class InfoManager : MonoBehaviour
     }
 
     private void GetAlgorithmInfo()
-    {        
+    {
         var dropdown = _algorithDropDown.GetComponent<TMP_Dropdown>();
         var selectedID = dropdown.value;
-        
-        if(selectedID <= 0)
+
+        if (selectedID <= 0)
         {
             IsAlgorithmSelected = false;
             IsAlgorithmSet = false;
@@ -156,17 +157,39 @@ public class InfoManager : MonoBehaviour
 
         AlgorithmName = dropdown.options[selectedID].text;
 
-        var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
+        var algorithmComponents = _algorithmHolder.GetComponentsInChildren<IAlgorithm>();
 
-        if (algorithmComponent != null)
+        //finds first active algorithm from the component list from the object
+        if (algorithmComponents != null)
         {
-            AlgorithmVersion = algorithmComponent.AlgorithmVersion;
-        }        
-        
-        IsAlgorithmSelected = true;
-        IsAlgorithmSet = true;
+            foreach (var algorithmComponent in algorithmComponents)
+            {
+                //cast to a monobehaviour to check if it is enabled or not
+                var tempComponent = algorithmComponent as MonoBehaviour;
+                if (tempComponent)
+                {
+                    if (tempComponent.enabled)
+                    {
+                        AlgorithmVersion = algorithmComponent.AlgorithmVersion;
+                        _currentAlgorithm = algorithmComponent;
+                        break;
+                    }
+                }
+            }
+        }
 
-        AddListener();
+        //if algo version is 0 then no valid algo was selected
+        if (AlgorithmVersion != 0)
+        {
+            IsAlgorithmSelected = true;
+            IsAlgorithmSet = true;
+
+            AddListener();
+        }
+        else
+        {
+            Debug.LogWarning("No valid algo was found");
+        }
     }
 
     private void GetIterationInfo()
@@ -179,11 +202,16 @@ public class InfoManager : MonoBehaviour
 
     public void RunCombo() //Run button
     {
-        var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
+        //var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
+        if (_currentAlgorithm == null)
+        {
+            Debug.LogWarning("No valid algo was selected, cannot run itterations");
+            return;
+        }
 
         for (int i = 0; i < IterationsAmount; i++)
         {
-            algorithmComponent.Run();
+            _currentAlgorithm.Run();
             GetElapsedTime();
             IsExportData = true;
         }
@@ -201,8 +229,13 @@ public class InfoManager : MonoBehaviour
     {
         if (!_eventListenerSet)
         {
-            _algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
-            
+            if (_currentAlgorithm == null)
+                return;
+
+
+            _algorithmEndEvent = _currentAlgorithm.AlgorithmEnd;
+            //_algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
+
             _algorithmEndEvent.AddListener(() => _csv.GetStatsData());
             _algorithmEndEvent.AddListener(() => _csv.GetBoardData());
 
