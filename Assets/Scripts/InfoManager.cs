@@ -202,7 +202,6 @@ public class InfoManager : MonoBehaviour
 
     public void RunCombo() //Run button
     {
-        //var algorithmComponent = _algorithmHolder.GetComponentInChildren<IAlgorithm>();
         if (_currentAlgorithm == null)
         {
             Debug.LogWarning("No valid algo was selected, cannot run itterations");
@@ -211,17 +210,18 @@ public class InfoManager : MonoBehaviour
 
         for (int i = 0; i < IterationsAmount; i++)
         {
+            ResetData();
+
             _currentAlgorithm.Run();
             GetElapsedTime();
+            _currentAlgorithm.AlgorithmEnd.Invoke();
             IsExportData = true;
         }
     }
 
     public void GetElapsedTime()
     {
-        var timeDifference = EndAlgorithmTime - StartAlgorithmTime;
-
-        ElapsedTime = timeDifference;
+        ElapsedTime = EndAlgorithmTime - StartAlgorithmTime;
         TimeDifference = ElapsedTime.TotalMilliseconds;
     }
 
@@ -232,9 +232,7 @@ public class InfoManager : MonoBehaviour
             if (_currentAlgorithm == null)
                 return;
 
-
             _algorithmEndEvent = _currentAlgorithm.AlgorithmEnd;
-            //_algorithmEndEvent = _algorithmHolder.GetComponentInChildren<IAlgorithm>().AlgorithmEnd;
 
             _algorithmEndEvent.AddListener(() => _csv.GetStatsData());
             _algorithmEndEvent.AddListener(() => _csv.GetBoardData());
@@ -258,5 +256,13 @@ public class InfoManager : MonoBehaviour
 
             BoardIsValid.Add(puzzle.CheckBoard(intList.ToList()));
         }
+    }
+
+    private void ResetData()
+    {
+        StartAlgorithmTime = new DateTime();
+        EndAlgorithmTime = new DateTime();
+        ElapsedTime = new TimeSpan();
+        TimeDifference = new double();
     }
 }

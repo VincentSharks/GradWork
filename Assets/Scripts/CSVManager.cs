@@ -12,10 +12,9 @@ public class CSVManager : MonoBehaviour
 {
     private InfoManager _info;
 
+    private string _filePath = "Assets/CSVFiles/";
     private string _statsFilesName = "StatsFile.csv";
     private string _boardFileName = "BoardFile.csv";
-
-    private string _filePath = "Assets/CSVFiles/";
 
     private string _fieldList;
 
@@ -131,7 +130,6 @@ public class CSVManager : MonoBehaviour
             {
                 _info.StartTimes.Add(_info.StartAlgorithmTime);
                 _info.EndTimes.Add(_info.EndAlgorithmTime);
-
                 _info.ElapsedTimes.Add(_info.ElapsedTime);
                 _info.ElapsedMiliseconds.Add(_info.TimeDifference);
             }

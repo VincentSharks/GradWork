@@ -42,7 +42,7 @@ public class BreadthFirstSearch : MonoBehaviour, IAlgorithm
 
         Info.EndAlgorithmTime = DateTime.Now;
         Info.IsReadyForData = true;
-        _algorithmEnd.Invoke();
+        //_algorithmEnd.Invoke();
     }
 
     private void CallGenerator()
