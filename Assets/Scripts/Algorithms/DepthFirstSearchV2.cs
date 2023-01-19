@@ -82,7 +82,8 @@ public class DepthFirstSearchV2 : MonoBehaviour, IAlgorithm
         else
         {
             //return new List<int>();
-            return ConvertTo1D(board2D);
+            //return ConvertTo1D(board2D);
+            return new List<int>();
         }
     }
 
