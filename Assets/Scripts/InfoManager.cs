@@ -208,6 +208,9 @@ public class InfoManager : MonoBehaviour
             return;
         }
 
+        ResetData();
+        ResetLists();
+
         for (int i = 0; i < IterationsAmount; i++)
         {
             ResetData();
@@ -264,5 +267,16 @@ public class InfoManager : MonoBehaviour
         EndAlgorithmTime = new DateTime();
         ElapsedTime = new TimeSpan();
         TimeDifference = new double();
+
+        
+    }
+    private void ResetLists()
+    {
+        BoardData = new List<string>();
+        BoardIsValid = new List<bool>();
+        StartTimes = new List<DateTime>();
+        EndTimes = new List<DateTime>();
+        ElapsedTimes = new List<TimeSpan>();
+        ElapsedMiliseconds = new List<double>();
     }
 }

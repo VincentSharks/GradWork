@@ -1417,6 +1417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2121267550296374343}
   - component: {fileID: 3024547143112889143}
+  - component: {fileID: 1372402485108692295}
   m_Layer: 5
   m_Name: BFS
   m_TagString: Untagged
@@ -1451,9 +1452,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3499336864391246496}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43b2b67ea33116b44b8acdbd8e18119e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1372402485108692295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3499336864391246496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b668c190c17a348b71202f2ffa77ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7318720290690710897
@@ -5137,26 +5150,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _puzzleDropDown: {fileID: 7318720292810728376}
-  puzzleName: 
+  PuzzleName: 
   _boardHolder: {fileID: 7318720292810723396}
-  boardSize: {x: 0, y: 0}
-  inputFields: []
-  isPuzzleSelected: 0
-  possibleInputs: 
+  BoardSize: {x: 0, y: 0}
+  InputFields: []
+  IsPuzzleSelected: 0
+  PossibleInputs: 
   _algorithDropDown: {fileID: 7269698812618472799}
-  algorithmName: 
+  AlgorithmName: 
   _algorithmHolder: {fileID: 7318720291483646378}
-  algorithmVersion: 1
-  isAlgorithmSelected: 0
-  isAlgorithmSet: 0
+  AlgorithmVersion: 0
+  IsAlgorithmSelected: 0
+  IsAlgorithmSet: 0
   _iterationsDropDown: {fileID: 7318720292442579647}
-  iterationsAmount: 1
+  IterationsAmount: 1
+  TimeDifference: 0
   _csv: {fileID: 0}
-  isExportData: 0
-  isReadyForData: 0
-  boardData: []
-  boardIsValid: 
-  isValuesChanged: 0
+  IsExportData: 0
+  IsReadyForData: 0
+  BoardData: []
+  BoardIsValid: 
+  ElapsedMiliseconds: []
+  IsValuesChanged: 0
 --- !u!1 &7318720292646010127
 GameObject:
   m_ObjectHideFlags: 0

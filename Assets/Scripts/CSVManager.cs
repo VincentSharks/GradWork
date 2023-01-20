@@ -106,8 +106,8 @@ public class CSVManager : MonoBehaviour
         var spacer = ",";
         TextWriter tw = new StreamWriter(path, false);
 
-        //Iteration | Puzzle | Algorithm | Random Seed | Start Time | End Time | Elapsed Time | Hoeveel ticks? | Hoeveel garbage?
-        tw.WriteLine("Iteration" + spacer + "Puzzle" + spacer + "Algorithm" + spacer + "Random Seed" + spacer + "Start Time" + spacer + "End Time" + spacer + "Elapsed Time" + spacer + "Elapsed Milliseconds");
+        //Iteration | Puzzle | Size | Algorithm | Random Seed | Start Time | End Time | Elapsed Time | Hoeveel ticks? | Hoeveel garbage?
+        tw.WriteLine("Iteration" + spacer + "Puzzle" + spacer + "Size" + spacer + "Algorithm" + spacer + "Random Seed" + spacer + "Start Time" + spacer + "End Time" + spacer + "Elapsed Time" + spacer + "Elapsed Milliseconds");
         tw.Close();
 
         //Open the file again and write in the data
@@ -115,8 +115,8 @@ public class CSVManager : MonoBehaviour
 
         for (int i = 1; i <= _info.IterationsAmount; i++)
         {
-            //1 | Sudoku | Dummy V1 | start time | end time | elapsed time
-            tw.WriteLine(i + spacer + _info.PuzzleName + spacer + _info.AlgorithmName + " v." + _info.AlgorithmVersion + spacer + _info.RandomSeed + spacer + 
+            //1 | Sudoku | 9x9 | Dummy V1 | start time | end time | elapsed time
+            tw.WriteLine(i + spacer + _info.PuzzleName + spacer + _info.BoardSize.x + "x" + _info.BoardSize.y + spacer + _info.AlgorithmName + " v." + _info.AlgorithmVersion + spacer + _info.RandomSeed + spacer + 
                 _info.StartTimes.ToArray().GetValue(i-1) + spacer + _info.EndTimes.ToArray().GetValue(i-1) + spacer + _info.ElapsedTimes.ToArray().GetValue(i - 1) + spacer + _info.ElapsedMiliseconds.ToArray().GetValue(i-1));
         }
 
@@ -126,13 +126,10 @@ public class CSVManager : MonoBehaviour
     {
         if (_info.IterationsAmount > 0)
         {
-            if (_info.IsReadyForData)
-            {
-                _info.StartTimes.Add(_info.StartAlgorithmTime);
-                _info.EndTimes.Add(_info.EndAlgorithmTime);
-                _info.ElapsedTimes.Add(_info.ElapsedTime);
-                _info.ElapsedMiliseconds.Add(_info.TimeDifference);
-            }
+            _info.StartTimes.Add(_info.StartAlgorithmTime);
+            _info.EndTimes.Add(_info.EndAlgorithmTime);
+            _info.ElapsedTimes.Add(_info.ElapsedTime);
+            _info.ElapsedMiliseconds.Add(_info.TimeDifference);
         }
     }
     #endregion

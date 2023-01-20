@@ -1,6 +1,6 @@
-Iteration,Puzzle,Algorithm,Random Seed,Start Time,End Time,Elapsed Time,Elapsed Milliseconds
-1,Sudoku,Bogosort v.1,251,1/17/2023 2:14:54 AM,1/17/2023 2:14:54 AM,00:00:00.0200168,20.0168
-2,Sudoku,Bogosort v.1,251,1/17/2023 2:14:54 AM,1/17/2023 2:14:54 AM,00:00:00.0195165,19.5165
-3,Sudoku,Bogosort v.1,251,1/17/2023 2:14:54 AM,1/17/2023 2:14:54 AM,00:00:00.0195168,19.5168
-4,Sudoku,Bogosort v.1,251,1/17/2023 2:14:54 AM,1/17/2023 2:14:54 AM,00:00:00.0195164,19.5164
-5,Sudoku,Bogosort v.1,251,1/17/2023 2:14:54 AM,1/17/2023 2:14:54 AM,00:00:00.0200167,20.0167
+Iteration,Puzzle,Size,Algorithm,Random Seed,Start Time,End Time,Elapsed Time,Elapsed Milliseconds
+1,Sudoku,9x9,Breadth-First Search v.2,704,1/20/2023 1:15:37 AM,1/20/2023 1:15:37 AM,00:00:00.2096800,209.68
+2,Sudoku,9x9,Breadth-First Search v.2,704,1/20/2023 1:15:37 AM,1/20/2023 1:15:41 AM,00:00:03.8903358,3890.3358
+3,Sudoku,9x9,Breadth-First Search v.2,704,1/20/2023 1:15:41 AM,1/20/2023 1:15:42 AM,00:00:00.5434511,543.4511
+4,Sudoku,9x9,Breadth-First Search v.2,704,1/20/2023 1:15:42 AM,1/20/2023 1:15:43 AM,00:00:00.7526455,752.6455
+5,Sudoku,9x9,Breadth-First Search v.2,704,1/20/2023 1:15:43 AM,1/20/2023 1:15:43 AM,00:00:00.2402060,240.206
